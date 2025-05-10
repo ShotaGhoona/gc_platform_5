@@ -34,6 +34,12 @@ def get_public_monthly_goals(db: Session) -> List[MonthlyGoalResponse]:
     goals = repo.get_public_goals()
     return [MonthlyGoalResponse.from_orm(g) for g in goals]
 
+# 指定範囲の目標を取得
+def get_user_goals_in_range(db: Session, user_id: str, start, end) -> List[MonthlyGoalResponse]:
+    repo = MonthlyGoalRepository(db)
+    goals = repo.get_by_user_in_range(user_id, start, end)
+    return [MonthlyGoalResponse.from_orm(g) for g in goals]
+
 def update_monthly_goal(db: Session, goal_id: int, goal_in: MonthlyGoalUpdate) -> MonthlyGoalResponse:
     repo = MonthlyGoalRepository(db)
     updates = {k: v for k, v in goal_in.dict().items() if v is not None}

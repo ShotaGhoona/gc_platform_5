@@ -40,6 +40,15 @@ class MonthlyGoalRepository:
     def get_public_goals(self) -> List[MonthlyGoal]:
         return self.db.query(MonthlyGoal).filter(MonthlyGoal.is_public == True, MonthlyGoal.deleted_at.is_(None)).all()
 
+    # 指定範囲の目標を取得
+    def get_by_user_in_range(self, user_id: str, start, end) -> List[MonthlyGoal]:
+        return self.db.query(MonthlyGoal).filter(
+            MonthlyGoal.user_id == user_id,
+            MonthlyGoal.monthly_start_date >= start,
+            MonthlyGoal.monthly_start_date < end,
+            MonthlyGoal.deleted_at.is_(None)
+        ).all()
+
     def update(self, goal_id: int, updates: dict) -> Optional[MonthlyGoal]:
         goal = self.get_by_id(goal_id)
         if not goal:
