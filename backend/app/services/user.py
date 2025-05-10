@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.repositories.user import UserRepository
+from app.database.repositories.user import UserRepository
 from app.schemas.user import UserCreate, UserUpdate, UserInDB
 from typing import Optional
 
