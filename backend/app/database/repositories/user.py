@@ -30,4 +30,7 @@ class UserRepository:
                 setattr(db_user, key, value)
             self.db.commit()
             self.db.refresh(db_user)
-        return db_user 
+        return db_user
+
+    def count(self) -> int:
+        return self.db.query(User).count() 

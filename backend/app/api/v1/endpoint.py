@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
-from app.services.user import UserService
+from app.services.user import UserService, count_users
 from app.schemas.user import UserCreate, UserUpdate, UserInDB
 from app.database.session import get_db
 from typing import Optional
+from app.services.systemNotice_service import get_notice_list, get_notice_detail
+from app.schemas.systemNotice_schema import SystemNoticeListResponse, SystemNoticeDetailResponse
 
 router = APIRouter()
 
@@ -75,5 +77,17 @@ async def clerk_webhook(request: Request, db: Session = Depends(get_db)):
     except Exception as e:
         print("Webhook処理中に例外発生:", e)
     return {"status": "ok"}
+
+@router.get("/system_notices", response_model=list[SystemNoticeListResponse])
+def list_system_notices(db: Session = Depends(get_db)):
+    return get_notice_list(db)
+
+@router.get("/system_notices/{notice_id}", response_model=SystemNoticeDetailResponse)
+def detail_system_notice(notice_id: int, db: Session = Depends(get_db)):
+    return get_notice_detail(db, notice_id)
+
+@router.get("/users/count")
+def get_user_count(db: Session = Depends(get_db)):
+    return {"count": count_users(db)}
 
 

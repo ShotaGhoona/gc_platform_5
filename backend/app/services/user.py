@@ -21,4 +21,10 @@ class UserService:
 
     def update_user(self, clerk_id: str, user: UserUpdate) -> Optional[UserInDB]:
         db_user = self.repository.update(clerk_id, user)
-        return UserInDB.from_orm(db_user) if db_user else None 
+        return UserInDB.from_orm(db_user) if db_user else None
+
+    def count_users(self, db):
+        return self.repository.count()
+
+def count_users(db):
+    return UserService(db).repository.count() 
