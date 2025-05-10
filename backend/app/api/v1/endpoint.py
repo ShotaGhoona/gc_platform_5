@@ -6,6 +6,11 @@ from app.database.session import get_db
 from typing import Optional
 from app.services.systemNotice_service import get_notice_list, get_notice_detail
 from app.schemas.systemNotice_schema import SystemNoticeListResponse, SystemNoticeDetailResponse
+from app.services.monthlyGoal_service import (
+    create_monthly_goal, get_monthly_goal, get_user_monthly_goals, get_public_monthly_goals,
+    update_monthly_goal, delete_monthly_goal
+)
+from app.schemas.monthlyGoal_shema import MonthlyGoalCreate, MonthlyGoalUpdate, MonthlyGoalResponse
 
 router = APIRouter()
 
@@ -78,6 +83,8 @@ async def clerk_webhook(request: Request, db: Session = Depends(get_db)):
         print("Webhook処理中に例外発生:", e)
     return {"status": "ok"}
 
+# システムお知らせ関連＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
 @router.get("/system_notices", response_model=list[SystemNoticeListResponse])
 def list_system_notices(db: Session = Depends(get_db)):
     return get_notice_list(db)
@@ -86,8 +93,37 @@ def list_system_notices(db: Session = Depends(get_db)):
 def detail_system_notice(notice_id: int, db: Session = Depends(get_db)):
     return get_notice_detail(db, notice_id)
 
+# ユーザー関連＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
 @router.get("/users/count")
 def get_user_count(db: Session = Depends(get_db)):
     return {"count": count_users(db)}
+
+# 月次目標関連＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+@router.post("/monthly_goals", response_model=MonthlyGoalResponse)
+def create_goal(goal: MonthlyGoalCreate, db: Session = Depends(get_db)):
+    return create_monthly_goal(db, goal)
+
+@router.get("/monthly_goals/{goal_id}", response_model=MonthlyGoalResponse)
+def get_goal(goal_id: int, db: Session = Depends(get_db)):
+    return get_monthly_goal(db, goal_id)
+
+@router.get("/monthly_goals/user/{user_id}", response_model=list[MonthlyGoalResponse])
+def get_user_goals(user_id: str, db: Session = Depends(get_db)):
+    return get_user_monthly_goals(db, user_id)
+
+@router.get("/monthly_goals/public", response_model=list[MonthlyGoalResponse])
+def get_public_goals(db: Session = Depends(get_db)):
+    return get_public_monthly_goals(db)
+
+@router.put("/monthly_goals/{goal_id}", response_model=MonthlyGoalResponse)
+def update_goal(goal_id: int, goal: MonthlyGoalUpdate, db: Session = Depends(get_db)):
+    return update_monthly_goal(db, goal_id, goal)
+
+@router.delete("/monthly_goals/{goal_id}")
+def delete_goal(goal_id: int, db: Session = Depends(get_db)):
+    delete_monthly_goal(db, goal_id)
+    return {"result": "deleted"}
 
 
