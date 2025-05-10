@@ -1,9 +1,9 @@
 // frontend/src/feature/home/home/hooks/useSystemNoticeDetail.ts
 import { useEffect, useState } from 'react';
-import { fetchSystemNoticeDetail, SystemNotionDetail } from '../services/systemNoticeDetailService';
+import { fetchSystemNoticeDetail, SystemNoticeDetail } from '../services/systemNoticeService';
 
 export function useSystemNoticeDetail(id: number | null) {
-  const [detail, setDetail] = useState<SystemNotionDetail | null>(null);
+  const [detail, setDetail] = useState<SystemNoticeDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

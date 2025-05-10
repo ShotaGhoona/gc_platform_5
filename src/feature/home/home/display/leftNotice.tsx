@@ -8,8 +8,6 @@ import { useSystemNoticeDetail } from '../hooks/useSystemNoticeDetail';
 import { NoticeDetail } from '../components/NoticeDetail';
 
 export default function LeftNotice() {
-
-
   const { notices, isLoading, error } = useSystemNoticeList();
   const { isOpen, selectedData, openSidePeak, closeSidePeak } = useSidePeak();
   const { detail, isLoading: detailLoading, error: detailError } = useSystemNoticeDetail(selectedData?.id);
@@ -25,15 +23,15 @@ export default function LeftNotice() {
           運営からのお知らせ
         </h2>
         <div className="flex-1 overflow-y-auto space-y-2">
-          {notices.length === 0 && <div>お知らせはありません</div>}
-          {notices.map(notice => (
+          {Array.isArray(notices) && notices.length === 0 && <div>お知らせはありません</div>}
+          {Array.isArray(notices) && notices.map(notice => (
             <div
               key={notice.id}
               className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
               onClick={() => openSidePeak(notice)}
             >
               <div className="flex items-center mb-1">
-                {notice.tags.map(tag => (
+                {Array.isArray(notice.tags) && notice.tags.map(tag => (
                   <span
                     key={tag.id}
                     className="text-[8px] px-2 py-0.5 rounded"
@@ -53,8 +51,8 @@ export default function LeftNotice() {
         </div>
       </div>
       <SidePeak isOpen={isOpen} onClose={closeSidePeak}>
-        {isLoading && <div>読み込み中...</div>}
-        {error && <div className="text-red-500">{error}</div>}
+        {detailLoading && <div>読み込み中...</div>}
+        {detailError && <div className="text-red-500">{detailError}</div>}
         {detail && <NoticeDetail notice={detail} />}
       </SidePeak>
     </>

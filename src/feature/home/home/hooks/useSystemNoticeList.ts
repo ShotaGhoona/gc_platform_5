@@ -1,6 +1,6 @@
 // frontend/src/feature/home/home/hooks/useSystemNoticeList.ts
 import { useEffect, useState } from 'react';
-import { fetchSystemNoticeList, SystemNotice } from '../services/systemNoticeListService';
+import { fetchSystemNoticeList, SystemNotice } from '../services/systemNoticeService';
 
 export function useSystemNoticeList() {
   const [notices, setNotices] = useState<SystemNotice[]>([]);
