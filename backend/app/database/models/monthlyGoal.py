@@ -13,6 +13,7 @@ class MonthlyGoal(Base):
     is_public = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     deleted_at = Column(DateTime(timezone=True), nullable=True)
+    fb = Column(Text, nullable=True)  # フィードバック欄を追加
 
     # リレーション
-    user = relationship("User", back_populates="monthly_goals") 
+    user = relationship("User", back_populates="monthly_goals")
