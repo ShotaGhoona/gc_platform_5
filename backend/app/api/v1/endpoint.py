@@ -8,7 +8,7 @@ from app.services.systemNotice_service import get_notice_list, get_notice_detail
 from app.schemas.systemNotice_schema import SystemNoticeListResponse, SystemNoticeDetailResponse
 from app.services.monthlyGoal_service import (
     create_monthly_goal, get_monthly_goal, get_user_monthly_goals, get_public_monthly_goals,
-    update_monthly_goal, delete_monthly_goal
+    update_monthly_goal, delete_monthly_goal, get_user_current_month_goals
 )
 from app.schemas.monthlyGoal_shema import MonthlyGoalCreate, MonthlyGoalUpdate, MonthlyGoalResponse
 
@@ -105,6 +105,10 @@ def get_user_count(db: Session = Depends(get_db)):
 def create_goal(goal: MonthlyGoalCreate, db: Session = Depends(get_db)):
     return create_monthly_goal(db, goal)
 
+@router.get("/monthly_goals/public", response_model=list[MonthlyGoalResponse])
+def get_public_goals(db: Session = Depends(get_db)):
+    return get_public_monthly_goals(db)
+
 @router.get("/monthly_goals/{goal_id}", response_model=MonthlyGoalResponse)
 def get_goal(goal_id: int, db: Session = Depends(get_db)):
     return get_monthly_goal(db, goal_id)
@@ -112,10 +116,6 @@ def get_goal(goal_id: int, db: Session = Depends(get_db)):
 @router.get("/monthly_goals/user/{user_id}", response_model=list[MonthlyGoalResponse])
 def get_user_goals(user_id: str, db: Session = Depends(get_db)):
     return get_user_monthly_goals(db, user_id)
-
-@router.get("/monthly_goals/public", response_model=list[MonthlyGoalResponse])
-def get_public_goals(db: Session = Depends(get_db)):
-    return get_public_monthly_goals(db)
 
 @router.put("/monthly_goals/{goal_id}", response_model=MonthlyGoalResponse)
 def update_goal(goal_id: int, goal: MonthlyGoalUpdate, db: Session = Depends(get_db)):
@@ -126,4 +126,7 @@ def delete_goal(goal_id: int, db: Session = Depends(get_db)):
     delete_monthly_goal(db, goal_id)
     return {"result": "deleted"}
 
-
+# ユーザーの今月の目標を取得
+@router.get("/monthly_goals/user/{user_id}/current", response_model=list[MonthlyGoalResponse])
+def get_user_current_month_goals_endpoint(user_id: str, db: Session = Depends(get_db)):
+    return get_user_current_month_goals(db, user_id)

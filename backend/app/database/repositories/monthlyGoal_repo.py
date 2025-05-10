@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from app.database.models.monthlyGoal import MonthlyGoal
 from typing import List, Optional
+from datetime import date
 
 class MonthlyGoalRepository:
     def __init__(self, db: Session):
@@ -15,9 +17,26 @@ class MonthlyGoalRepository:
     def get_by_id(self, goal_id: int) -> Optional[MonthlyGoal]:
         return self.db.query(MonthlyGoal).filter(MonthlyGoal.id == goal_id, MonthlyGoal.deleted_at.is_(None)).first()
 
+    # ユーザーの目標を取得
     def get_by_user(self, user_id: str) -> List[MonthlyGoal]:
         return self.db.query(MonthlyGoal).filter(MonthlyGoal.user_id == user_id, MonthlyGoal.deleted_at.is_(None)).all()
 
+    # ユーザーの今月の目標を取得
+    def get_by_user_current_month(self, user_id: str) -> List[MonthlyGoal]:
+        today = date.today()
+        first_day = today.replace(day=1)
+        if today.month == 12:
+            next_month = today.replace(year=today.year+1, month=1, day=1)
+        else:
+            next_month = today.replace(month=today.month+1, day=1)
+        return self.db.query(MonthlyGoal).filter(
+            MonthlyGoal.user_id == user_id,
+            MonthlyGoal.monthly_start_date >= first_day,
+            MonthlyGoal.monthly_start_date < next_month,
+            MonthlyGoal.deleted_at.is_(None)
+        ).all()
+
+    # 公開された目標を取得
     def get_public_goals(self) -> List[MonthlyGoal]:
         return self.db.query(MonthlyGoal).filter(MonthlyGoal.is_public == True, MonthlyGoal.deleted_at.is_(None)).all()
 

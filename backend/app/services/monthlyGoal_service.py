@@ -23,6 +23,12 @@ def get_user_monthly_goals(db: Session, user_id: str) -> List[MonthlyGoalRespons
     goals = repo.get_by_user(user_id)
     return [MonthlyGoalResponse.from_orm(g) for g in goals]
 
+# ユーザーの今月の目標を取得
+def get_user_current_month_goals(db: Session, user_id: str) -> List[MonthlyGoalResponse]:
+    repo = MonthlyGoalRepository(db)
+    goals = repo.get_by_user_current_month(user_id)
+    return [MonthlyGoalResponse.from_orm(g) for g in goals]
+
 def get_public_monthly_goals(db: Session) -> List[MonthlyGoalResponse]:
     repo = MonthlyGoalRepository(db)
     goals = repo.get_public_goals()
