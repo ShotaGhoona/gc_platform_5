@@ -18,6 +18,7 @@ const groups: { title: string; links: { href: string; label: string; icon: strin
       { href: '/ranking', label: 'Ranking', icon: '/svg/sidebarIcon/ranking.svg' },
       { href: '/month', label: 'Month', icon: '/svg/sidebarIcon/month.svg' },
       { href: '/morning-event', label: 'Morning Event', icon: '/svg/sidebarIcon/externalEvents.svg' },
+      { href: '/monthly-goal', label: 'Monthly Goal', icon: '/svg/sidebarIcon/externalEvents.svg' },
     ],
   },
   {

@@ -12,6 +12,9 @@ export default function DashboardPage() {
         <div className="w-[400px] h-full bg-white rounded-lg">
           <TierCard />
         </div>
+        <div className="w-[400px] h-full bg-white rounded-lg">
+          <TierCard />
+        </div>
         <div className="flex-1 h-full">
           <ProfileSection />
         </div>
