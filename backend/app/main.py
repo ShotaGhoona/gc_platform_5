@@ -27,3 +27,10 @@ app.add_middleware(
 
 # APIルーターの登録
 app.include_router(api_router, prefix="/api/v1")
+
+# ルーティング一覧を起動時に出力
+@app.on_event("startup")
+def print_routes():
+    print("=== FastAPI Registered Routes ===")
+    for route in app.routes:
+        print(route.path, route.methods)

@@ -15,4 +15,10 @@ class Tier(Base):
     deleted_at = Column(DateTime(timezone=True), nullable=True)
 
     # リレーション
-    users = relationship("User", back_populates="tier") 
+    user_tiers = relationship("UserTier", back_populates="tier", cascade="all, delete-orphan")
+    users = relationship(
+        "User",
+        secondary="user_tiers",
+        back_populates="tiers",
+        overlaps="user_tiers"
+    )
