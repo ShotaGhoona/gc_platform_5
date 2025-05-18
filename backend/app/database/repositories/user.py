@@ -9,8 +9,7 @@ class UserRepository:
     def create(self, user: UserCreate) -> User:
         db_user = User(
             clerk_id=user.clerk_id,
-            email=user.email,
-            username=user.username
+            email=user.email
         )
         self.db.add(db_user)
         self.db.commit()

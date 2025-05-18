@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
 from sqlalchemy.orm import relationship
 from app.database.models.base import Base
+from app.database.models.tier import Tier
 
 class UserTier(Base):
     __tablename__ = "user_tiers"

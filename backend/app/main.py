@@ -9,6 +9,8 @@ import app.database.models.systemNotice
 import app.database.models.profile
 import app.database.models.tier
 import app.database.models.monthlyGoal
+import app.database.models.user_tier
+import app.database.models.attendance
 
 # データベーステーブルを作成
 print(Base.metadata.tables)

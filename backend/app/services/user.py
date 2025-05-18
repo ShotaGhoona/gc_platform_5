@@ -28,3 +28,20 @@ class UserService:
 
 def count_users(db):
     return UserService(db).repository.count() 
+
+def set_discord_id(db: Session, user_id: str, discord_id: str) -> bool:
+    repo = UserRepository(db)
+    user = repo.get_by_clerk_id(user_id)
+    if not user:
+        return False
+    user.discord_id = discord_id
+    db.commit()
+    db.refresh(user)
+    return True
+
+def get_discord_id(db: Session, user_id: str) -> str:
+    repo = UserRepository(db)
+    user = repo.get_by_clerk_id(user_id)
+    if not user:
+        return None
+    return user.discord_id
