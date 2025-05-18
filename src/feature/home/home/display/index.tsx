@@ -13,7 +13,7 @@ export default function IndexPage() {
           <Member />
         </div>
       </div>
-      <div className="w-[300px] h-full bg-white rounded-lg">
+      <div className="w-[400px] h-full bg-white rounded-lg">
         <LeftNotice />
       </div>
     </div>

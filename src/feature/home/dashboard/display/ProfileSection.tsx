@@ -7,7 +7,7 @@ import { EditFbModal } from '@/components/EditFbModal';
 export const ProfileSection = () => {
 
   const { user } = useUser();
-  const userId = user?.id;
+  const userId = user?.id; // ClerkのユーザーID
   const { goals, isLoading, error } = useMonthlyGoals(userId);
   const thisMonth = new Date().getMonth() + 1;
   const [isEditGoalOpen, setIsEditGoalOpen] = useState(false);
@@ -78,7 +78,7 @@ export const ProfileSection = () => {
         <PopUp isOpen={isEditFbOpen} onClose={() => setIsEditFbOpen(false)}>
           <EditFbModal 
             onClose={() => setIsEditFbOpen(false)}
-            addMonth={`${thisMonth-1}-01`}
+            addMonth={String(thisMonth)}
           />
         </PopUp>
       )}

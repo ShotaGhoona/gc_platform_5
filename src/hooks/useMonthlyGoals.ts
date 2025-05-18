@@ -8,7 +8,7 @@ import {
   MonthlyGoal,
   fetchUserGoalsInRange,
   fetchPublicMonthlyGoals,
-} from '../service/monthlyGoalService';
+} from '../services/monthlyGoalService';
 
 export function useMonthlyGoals(userId: string | undefined, month?: string) {
   const [goals, setGoals] = useState<MonthlyGoal[]>([]);

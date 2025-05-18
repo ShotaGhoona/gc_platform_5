@@ -8,9 +8,9 @@ export default function Ranking() {
         <div className="transition-all duration-300">
         <Sidebar />
         </div>
-        <div className="flex-1 flex flex-col max-h-screen">
+        <div className="flex-1 flex flex-col h-screen">
         <Header />
-        <main className="flex-1 min-h-[calc(100vh-45px)] p-5">
+        <main className="flex-1 h-[calc(100vh-45px)] p-5">
             <IndexPage />
         </main>
         </div>
