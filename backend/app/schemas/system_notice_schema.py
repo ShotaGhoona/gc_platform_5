@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 
 class SystemNoticeTagResponse(BaseModel):
@@ -10,7 +10,8 @@ class SystemNoticeTagResponse(BaseModel):
 class SystemNoticeListResponse(BaseModel):
     id: int
     title: str
-    publish_start_at: datetime
+    description: Optional[str] = ""
+    tags: List[SystemNoticeTagResponse] = []
 
 class SystemNoticeDetailResponse(BaseModel):
     id: int

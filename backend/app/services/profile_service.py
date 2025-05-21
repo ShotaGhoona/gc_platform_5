@@ -130,3 +130,6 @@ def get_member_detail_service(db: Session, user_id: str):
         sns=sns,
         tiers=tier_schemas,
     )
+
+def get_vision_service(db: Session, user_id: str):
+    return ProfileRepository.get_vision(db, user_id)

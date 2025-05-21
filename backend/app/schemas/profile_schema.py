@@ -76,3 +76,6 @@ class MemberDetailSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+class VisionSchema(BaseModel):
+    vision: Optional[str] = None

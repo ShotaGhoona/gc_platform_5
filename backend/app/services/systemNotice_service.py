@@ -1,4 +1,4 @@
-from app.schemas.systemNotice_schema import SystemNoticeListResponse, SystemNoticeDetailResponse, SystemNoticeTagResponse
+from app.schemas.system_notice_schema import SystemNoticeListResponse, SystemNoticeDetailResponse, SystemNoticeTagResponse
 from app.database.repositories.systemNotice_repo import SystemNoticeRepository
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
@@ -6,11 +6,15 @@ from sqlalchemy.orm import Session
 def get_notice_list(session: Session):
     repo = SystemNoticeRepository(session)
     notices = repo.get_list()
-    return [SystemNoticeListResponse(
-        id=n.id,
-        title=n.title,
-        publish_start_at=n.publish_start_at
-    ) for n in notices]
+    return [
+        SystemNoticeListResponse(
+            id=n.id,
+            title=n.title,
+            description=getattr(n, "description", ""),
+            tags=[SystemNoticeTagResponse(id=t.id, name=t.name, color=t.color) for t in getattr(n, "tags", [])],
+        )
+        for n in notices
+    ]
 
 def get_notice_detail(session: Session, id: int):
     repo = SystemNoticeRepository(session)

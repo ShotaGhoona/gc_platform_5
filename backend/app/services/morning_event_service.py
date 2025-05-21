@@ -1,15 +1,15 @@
 from app.database.repositories.morning_event_repo import MorningEventRepository
-from app.schemas.morning_event_schema import (
-    MorningEventListItem,
-    MorningEventDetail,
-    MorningEventParticipant,
-    MorningEventTagSchema,
-)
+from app.schemas.morning_event_schema import (MorningEventListItem,MorningEventDetail,MorningEventParticipant,MorningEventTag)
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from datetime import date, datetime
 import calendar
 
+# タグ一覧取得
+def get_morning_event_tags_service(db: Session) -> List[MorningEventTag]:
+    return db.query(MorningEventTag).all()
+
+# 一覧取得
 def get_morning_event_list_service(db: Session, range: str = "this_month", user_id: str = None) -> List[MorningEventListItem]:
     from datetime import date
     import calendar
@@ -52,7 +52,7 @@ def get_morning_event_list_service(db: Session, range: str = "this_month", user_
     for event in events:
         host_profile = event.host_user.profile if event.host_user and event.host_user.profile else None
         tags = [
-            MorningEventTagSchema(
+            MorningEventTag(
                 id=str(tag.id),
                 name=tag.name,
                 color=tag.color
@@ -78,6 +78,7 @@ def get_morning_event_list_service(db: Session, range: str = "this_month", user_
         )
     return result
 
+# 参加 or 主催しているイベントのみ返す（月指定対応）
 def get_participating_or_host_morning_event_list_service(db: Session, user_id: str, month: str = None) -> List[MorningEventListItem]:
     """
     指定ユーザーが参加 or 主催しているイベントのみ返す（月指定対応）
@@ -105,7 +106,7 @@ def get_participating_or_host_morning_event_list_service(db: Session, user_id: s
         seen.add(str(event.id))
         host_profile = event.host_user.profile if event.host_user and event.host_user.profile else None
         tags = [
-            MorningEventTagSchema(
+            MorningEventTag(
                 id=str(tag.id),
                 name=tag.name,
                 color=tag.color
@@ -127,6 +128,7 @@ def get_participating_or_host_morning_event_list_service(db: Session, user_id: s
         )
     return result
 
+# 詳細取得
 def get_morning_event_detail_service(db: Session, event_id: str, user_id: str = None) -> MorningEventDetail:
     repo = MorningEventRepository(db)
     event = repo.get_morning_event_detail(event_id)
@@ -145,7 +147,7 @@ def get_morning_event_detail_service(db: Session, event_id: str, user_id: str = 
             )
         )
     tags = [
-        MorningEventTagSchema(
+        MorningEventTag(
             id=str(tag.id),
             name=tag.name,
             color=tag.color
@@ -172,6 +174,7 @@ def get_morning_event_detail_service(db: Session, event_id: str, user_id: str = 
         is_host=is_host,
     )
 
+# 参加
 def join_morning_event_service(db: Session, event_id: str, user_id: str) -> bool:
     repo = MorningEventRepository(db)
     event = repo.get_morning_event_detail(event_id)
@@ -182,10 +185,11 @@ def join_morning_event_service(db: Session, event_id: str, user_id: str) -> bool
         return False
     repo.add_participant(event_id, user_id)
     return True
-
+# キャンセル
 def cancel_morning_event_service(db: Session, event_id: str, user_id: str) -> bool:
     repo = MorningEventRepository(db)
     return repo.cancel_participant(event_id, user_id)
+# 作成
 def create_morning_event_service(db: Session, data: dict):
     from app.database.models.morning_event import MorningEvent, MorningEventTag
     from app.database.models.user import User
@@ -225,7 +229,7 @@ def create_morning_event_service(db: Session, data: dict):
     db.commit()
     db.refresh(event)
     return {"result": "ok", "event_id": str(event.id)}
-
+# 更新
 def update_morning_event_service(db: Session, event_id: str, data: dict):
     from app.database.models.morning_event import MorningEvent, MorningEventTag
     from datetime import datetime
@@ -255,7 +259,7 @@ def update_morning_event_service(db: Session, event_id: str, data: dict):
     db.commit()
     db.refresh(event)
     return {"result": "ok", "event_id": str(event.id)}
-
+# 消去
 def delete_morning_event_service(db: Session, event_id: str):
     from app.database.models.morning_event import MorningEvent
     from datetime import datetime

@@ -24,6 +24,8 @@ class MonthlyGoalResponse(BaseModel):
     fb: Optional[str] = None
     created_at: datetime
     deleted_at: Optional[datetime]
+    username: Optional[str] = None
+    avatar_image_url: Optional[str] = None
 
     class Config:
         orm_mode = True

@@ -44,3 +44,10 @@ class ProfileRepository:
         )
 
         return profile, tiers
+
+    @staticmethod
+    def get_vision(db: Session, user_id: str):
+        profile = db.query(Profile).filter(Profile.user_id == user_id).first()
+        if not profile:
+            return None
+        return profile.vision

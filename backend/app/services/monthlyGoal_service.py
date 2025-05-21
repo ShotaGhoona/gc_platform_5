@@ -32,7 +32,27 @@ def get_user_current_month_goals(db: Session, user_id: str) -> List[MonthlyGoalR
 def get_public_monthly_goals(db: Session) -> List[MonthlyGoalResponse]:
     repo = MonthlyGoalRepository(db)
     goals = repo.get_public_goals()
-    return [MonthlyGoalResponse.from_orm(g) for g in goals]
+    result = []
+    for g in goals:
+        username = None
+        avatar_image_url = None
+        if hasattr(g, "user") and g.user:
+            username = getattr(g.user, "username", None)
+            if hasattr(g.user, "profile") and g.user.profile:
+                avatar_image_url = getattr(g.user.profile, "avatar_image_url", None)
+        result.append(MonthlyGoalResponse(
+            id=g.id,
+            user_id=g.user_id,
+            goal_text=g.goal_text,
+            monthly_start_date=g.monthly_start_date,
+            is_public=g.is_public,
+            fb=g.fb,
+            created_at=g.created_at,
+            deleted_at=g.deleted_at,
+            username=username,
+            avatar_image_url=avatar_image_url,
+        ))
+    return result
 
 # 指定範囲の目標を取得
 def get_user_goals_in_range(db: Session, user_id: str, start, end) -> List[MonthlyGoalResponse]:

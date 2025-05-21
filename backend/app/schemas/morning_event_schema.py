@@ -1,10 +1,15 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
-class MorningEventTagSchema(BaseModel):
+class MorningEventTag(BaseModel):
     id: str
     name: str
     color: str
+
+class MorningEventParticipant(BaseModel):
+    user_id: str
+    avatar_image_url: Optional[str]
+    user_name: Optional[str]
 
 class MorningEventListItem(BaseModel):
     id: str
@@ -13,14 +18,9 @@ class MorningEventListItem(BaseModel):
     host_avatar_image_url: Optional[str]
     start_at: str
     end_at: str
-    tags: List[MorningEventTagSchema]
+    tags: List[MorningEventTag]
     is_participating: bool
     is_host: bool
-
-class MorningEventParticipant(BaseModel):
-    user_id: str
-    avatar_image_url: Optional[str]
-    user_name: Optional[str]
 
 class MorningEventDetail(BaseModel):
     id: str
@@ -31,7 +31,7 @@ class MorningEventDetail(BaseModel):
     host_user_id: Optional[str]
     start_at: str
     end_at: str
-    tags: List[MorningEventTagSchema]
+    tags: List[MorningEventTag]
     participants: List[MorningEventParticipant]
     is_participating: bool
     is_host: bool
