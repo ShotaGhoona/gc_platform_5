@@ -20,6 +20,8 @@ from app.services.morning_event_service import (
     update_morning_event_service, 
     delete_morning_event_service
 )
+
+
 @router.get("/morning_event_tags", response_model=list[MorningEventTag])
 def get_morning_event_tags(
     db: Session = Depends(get_db)
@@ -29,10 +31,10 @@ def get_morning_event_tags(
 @router.get("/morning_events_list", response_model=list[MorningEventListItem])
 def api_get_morning_event_list(
     db: Session = Depends(get_db),
-    range: str = Query("this_month", description="this_month/last_month/next_month/all"),
+    month: str = Query("this_month", description="this_month/last_month/next_month/all"),
     user_id: str = Query(None)
 ):
-    return get_morning_event_list_service(db, range=range, user_id=user_id)
+    return get_morning_event_list_service(db, month=month, user_id=user_id)
 
 @router.get("/morning_events/participating", response_model=list[MorningEventListItem])
 def api_get_participating_morning_event_list(

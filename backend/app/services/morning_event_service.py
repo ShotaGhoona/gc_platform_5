@@ -1,50 +1,28 @@
 from app.database.repositories.morning_event_repo import MorningEventRepository
-from app.schemas.morning_event_schema import (MorningEventListItem,MorningEventDetail,MorningEventParticipant,MorningEventTag)
+from app.schemas.morning_event_schema import (MorningEventListItem, MorningEventDetail, MorningEventParticipant, MorningEventTag)
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from datetime import date, datetime
 import calendar
+from app.database.models.morning_event import MorningEventTag as MorningEventTagModel
 
 # タグ一覧取得
 def get_morning_event_tags_service(db: Session) -> List[MorningEventTag]:
-    return db.query(MorningEventTag).all()
+    tags = db.query(MorningEventTagModel).all()
+    return [MorningEventTag(id=str(tag.id), name=tag.name, color=tag.color) for tag in tags]
 
 # 一覧取得
-def get_morning_event_list_service(db: Session, range: str = "this_month", user_id: str = None) -> List[MorningEventListItem]:
+def get_morning_event_list_service(db: Session, month: str = None, user_id: str = None) -> List[MorningEventListItem]:
     from datetime import date
     import calendar
 
-    today = date.today()
     date_from = date_to = None
-
-    if range == "this_month":
-        year, mon = today.year, today.month
+    if month and len(month) == 6:
+        year = int(month[:4])
+        mon = int(month[4:])
         date_from = date(year, mon, 1)
         last_day = calendar.monthrange(year, mon)[1]
         date_to = date(year, mon, last_day)
-    elif range == "last_month":
-        year = today.year
-        mon = today.month - 1
-        if mon == 0:
-            year -= 1
-            mon = 12
-        date_from = date(year, mon, 1)
-        last_day = calendar.monthrange(year, mon)[1]
-        date_to = date(year, mon, last_day)
-    elif range == "next_month":
-        year = today.year
-        mon = today.month + 1
-        if mon == 13:
-            year += 1
-            mon = 1
-        date_from = date(year, mon, 1)
-        last_day = calendar.monthrange(year, mon)[1]
-        date_to = date(year, mon, last_day)
-    elif range == "all":
-        date_from = date_to = None
-    else:
-        # 不正な値の場合は全件返す
-        date_from = date_to = None
 
     repo = MorningEventRepository(db)
     events = repo.get_morning_event_list(date_from, date_to)

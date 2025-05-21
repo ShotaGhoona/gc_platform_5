@@ -6,6 +6,9 @@ class MorningEventTag(BaseModel):
     name: str
     color: str
 
+    class Config:
+        orm_mode = True
+
 class MorningEventParticipant(BaseModel):
     user_id: str
     avatar_image_url: Optional[str]
