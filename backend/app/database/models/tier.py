@@ -11,9 +11,11 @@ class Tier(Base):
     title_ja = Column(String(40), nullable=False)
     badge_color = Column(String(10), nullable=False)
     card_image_url = Column(Text)
+    short_description = Column(Text)
+    long_description = Column(Text)
+    story = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     deleted_at = Column(DateTime(timezone=True), nullable=True)
-
     # リレーション
     user_tiers = relationship("UserTier", back_populates="tier", cascade="all, delete-orphan")
     users = relationship(

@@ -1,4 +1,6 @@
+import uuid
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Table
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from .base import Base
@@ -7,7 +9,7 @@ from .base import Base
 profile_interest_table = Table(
     "profile_interest",
     Base.metadata,
-    Column("profile_id", Integer, ForeignKey("profiles.id", ondelete="CASCADE"), primary_key=True),
+    Column("profile_id", UUID(as_uuid=True), ForeignKey("profiles.id", ondelete="CASCADE"), primary_key=True),
     Column("interest_id", Integer, ForeignKey("interests.id", ondelete="CASCADE"), primary_key=True),
 )
 
@@ -15,7 +17,7 @@ profile_interest_table = Table(
 profile_core_skill_table = Table(
     "profile_core_skill",
     Base.metadata,
-    Column("profile_id", Integer, ForeignKey("profiles.id", ondelete="CASCADE"), primary_key=True),
+    Column("profile_id", UUID(as_uuid=True), ForeignKey("profiles.id", ondelete="CASCADE"), primary_key=True),
     Column("core_skill_id", Integer, ForeignKey("core_skills.id", ondelete="CASCADE"), primary_key=True),
 )
 
@@ -23,20 +25,31 @@ profile_core_skill_table = Table(
 profile_sns_table = Table(
     "profile_sns",
     Base.metadata,
-    Column("profile_id", Integer, ForeignKey("profiles.id", ondelete="CASCADE"), primary_key=True),
-    Column("sns_id", Integer, ForeignKey("sns.id", ondelete="CASCADE"), primary_key=True),
+    Column("id", UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
+    Column("profile_id", UUID(as_uuid=True), ForeignKey("profiles.id", ondelete="CASCADE"), nullable=False),
+    Column("sns_id", Integer, ForeignKey("sns.id", ondelete="CASCADE"), nullable=False),
     Column("link", Text, nullable=False),  # ユーザーごとのSNSアカウントURL
+    Column("description", Text, nullable=True),  # SNSごとの説明文
+)
+
+# 中間テーブル: profileとrival（自分が選んだライバルの関係）
+profile_rival_table = Table(
+    "profile_rival",
+    Base.metadata,
+    Column("profile_id", UUID(as_uuid=True), ForeignKey("profiles.id", ondelete="CASCADE"), primary_key=True),
+    Column("rival_profile_id", UUID(as_uuid=True), ForeignKey("profiles.id", ondelete="CASCADE"), primary_key=True),
 )
 
 class Profile(Base):
     __tablename__ = "profiles"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     user_id = Column(String, ForeignKey("users.clerk_id"), unique=True, nullable=False)
     username = Column(String(60), nullable=False)
     vision = Column(String(120))
     bio = Column(String(120))
     one_line_profile = Column(String(120))
+    personal_color = Column(String(60))
     background = Column(Text)
     avatar_image_url = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -64,12 +77,20 @@ class Profile(Base):
         back_populates="profiles"
     )
 
+    # ライバル（自分が選んだ相手）
+    rivals = relationship(
+        "Profile",
+        secondary=profile_rival_table,
+        primaryjoin=id==profile_rival_table.c.profile_id,
+        secondaryjoin=id==profile_rival_table.c.rival_profile_id,
+        backref="rivaled_by"
+    )
+
 class SNS(Base):
     __tablename__ = "sns"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(60), nullable=False)
-    image_url = Column(Text, nullable=True)
 
     profiles = relationship(
         "Profile",

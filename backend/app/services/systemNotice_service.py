@@ -10,7 +10,7 @@ def get_notice_list(session: Session):
         SystemNoticeListResponse(
             id=n.id,
             title=n.title,
-            description=getattr(n, "description", ""),
+            description=getattr(n, "description", "")[:50] + ("..." if len(getattr(n, "description", "")) > 50 else ""),
             tags=[SystemNoticeTagResponse(id=t.id, name=t.name, color=t.color) for t in getattr(n, "tags", [])],
         )
         for n in notices
