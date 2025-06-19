@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.repositories.user import UserRepository
+from app.database.repositories.user import UserRepository
 from app.schemas.user import UserCreate, UserUpdate, UserInDB
 from typing import Optional
 
@@ -21,4 +21,27 @@ class UserService:
 
     def update_user(self, clerk_id: str, user: UserUpdate) -> Optional[UserInDB]:
         db_user = self.repository.update(clerk_id, user)
-        return UserInDB.from_orm(db_user) if db_user else None 
+        return UserInDB.from_orm(db_user) if db_user else None
+
+    def count_users(self, db):
+        return self.repository.count()
+
+def count_users(db):
+    return UserService(db).repository.count() 
+
+def set_discord_id(db: Session, user_id: str, discord_id: str) -> bool:
+    repo = UserRepository(db)
+    user = repo.get_by_clerk_id(user_id)
+    if not user:
+        return False
+    user.discord_id = discord_id
+    db.commit()
+    db.refresh(user)
+    return True
+
+def get_discord_id(db: Session, user_id: str) -> str:
+    repo = UserRepository(db)
+    user = repo.get_by_clerk_id(user_id)
+    if not user:
+        return None
+    return user.discord_id
