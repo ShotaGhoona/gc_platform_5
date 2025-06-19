@@ -31,9 +31,17 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="GC Platform API")
 
 # CORS設定
+import os
+allowed_origins = [
+    "http://localhost:3000",  # 開発環境
+    os.getenv("FRONTEND_URL", ""),  # プロダクション環境のフロントエンドURL
+]
+# 空文字列を除去
+allowed_origins = [origin for origin in allowed_origins if origin]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], 
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],    
@@ -53,6 +61,11 @@ app.include_router(profile_router, prefix="/api/v1")
 app.include_router(discord_router, prefix="/api/v1")
 app.include_router(morning_goal_router, prefix="/api/v1")
 
+
+# ヘルスチェックエンドポイント
+@app.get("/api/v1/health")
+def health_check():
+    return {"status": "healthy"}
 
 # ルーティング一覧を起動時に出力
 @app.on_event("startup")

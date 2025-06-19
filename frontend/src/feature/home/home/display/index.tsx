@@ -16,9 +16,8 @@ export default function IndexPage() {
           <Member />
         </div>
       </div>
-      <div className="w-[400px] h-full bg-white rounded-lg shadow-md">
-        <LeftNotice />
-      </div>
+      <LeftNotice />
     </div>
+    
   );
 }

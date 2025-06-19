@@ -34,32 +34,73 @@ const config: Config = {
         popover: 'var(--popover)',
         'popover-foreground': 'var(--popover-foreground)',
       },
+      keyframes: {
+        "slide-in-from-right": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "slide-out-to-right": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+        "slide-in-from-left": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "slide-out-to-left": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
+        "slide-in-from-bottom": {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "slide-out-to-bottom": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(100%)" },
+        },
+        "slide-in-from-top": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "slide-out-to-top": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(-100%)" },
+        },
+        "fade-in-0": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "fade-out-0": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
+        "animate-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "animate-out": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
+      },
+      animation: {
+        "slide-in-from-right": "slide-in-from-right 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-out-to-right": "slide-out-to-right 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-in-from-left": "slide-in-from-left 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-out-to-left": "slide-out-to-left 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-in-from-bottom": "slide-in-from-bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-out-to-bottom": "slide-out-to-bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-in-from-top": "slide-in-from-top 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-out-to-top": "slide-out-to-top 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        "fade-in-0": "fade-in-0 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "fade-out-0": "fade-out-0 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "animate-in": "animate-in 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "animate-out": "animate-out 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+      },
     },
   },
   plugins: [],
 }
 
-export default config 
-
-// 背景色（Background）
-// background: メインの背景色
-// background-foreground: 背景上のテキスト色
-// セカンダリー（Secondary）
-// secondary: 補助的な要素の背景色
-// secondary-foreground: セカンダリー要素上のテキスト色
-// ミュート（Muted）
-// muted: 控えめな要素の背景色
-// muted-foreground: 控えめなテキスト色
-// ボーダーと入力
-// border: 境界線の色
-// input: 入力フィールドの背景色
-// リンク
-// link: リンクの色
-// link-foreground: ホバー時のリンク色
-// 状態を示す色
-// success: 成功状態を示す色
-// warning: 警告状態を示す色
-// destructive: エラーや削除などの危険な操作を示す色
-// UIコンポーネント用
-// card: カードの背景色
-// popover: ポップオーバーの背景色
+export default config

@@ -47,10 +47,10 @@
   --radius: 0.625rem;
 
   /* ───── ベース ───── */
-  --background:            #FFFFFF; /* oklch(1 0 0) */
+  --background:            #EEEEEE; /* oklch(1 0 0) */
   --foreground:            #252525; /* oklch(0.14 0 0) */
 
-  --card:                  #FAFAFA; /* oklch(0.98 0 0) */
+  --card:                  #FFFFFF; /* oklch(0.98 0 0) */
   --card-foreground:       var(--foreground);
 
   --popover:               var(--card);

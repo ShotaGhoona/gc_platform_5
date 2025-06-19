@@ -2,59 +2,92 @@
 'use client';
 
 import { useSystemNoticeList } from '../hooks/useSystemNoticeList';
-import { useSidePeak } from '@/hooks/useSidePeak';
-import { SidePeak } from '@/components/display/SidePeak';
 import { useSystemNoticeDetail } from '../hooks/useSystemNoticeDetail';
 import { NoticeDetailSidePeakChildren } from '../components/NoticeDetailSidePeakChildren';
+import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useState } from 'react';
 
 export default function LeftNotice() {
   const { notices, isLoading, error } = useSystemNoticeList();
-  const { isOpen, selectedData, openSidePeak, closeSidePeak } = useSidePeak();
-  const { detail, isLoading: detailLoading, error: detailError } = useSystemNoticeDetail(selectedData?.id);
-  
-  // ローディング設定
-  if (isLoading) {return <div className="w-full h-full p-10">読み込み中...</div>;}
-  if (error) {return <div className="w-full h-full p-10 text-red-500">エラーが発生しました: {error}</div>;}
+  const [selectedNotice, setSelectedNotice] = useState<any | null>(null);
+  const { detail, isLoading: detailLoading, error: detailError } = useSystemNoticeDetail(selectedNotice?.id);
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent>
+          <div>読み込み中...</div>
+        </CardContent>
+      </Card>
+    );
+  }
+  if (error) {
+    return (
+      <Card>
+        <CardContent>
+          <div className="text-red-500">エラーが発生しました: {error}</div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <>
-      <div className="w-full h-full p-5 flex flex-col">
-        <h2 className="text-base font-bold text-gray-700 mb-6 flex-shrink-0">
-          運営からのお知らせ
-        </h2>
-        <div className="flex-1 overflow-y-auto space-y-2">
-          {Array.isArray(notices) && notices.length === 0 && <div>お知らせはありません</div>}
-          {Array.isArray(notices) && notices.map(notice => (
-            <div
-              key={notice.id}
-              className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => openSidePeak(notice)}
-            >
-              <div className="flex items-center mb-1">
-                {Array.isArray(notice.tags) && notice.tags.map(tag => (
-                  <span
-                    key={tag.id}
-                    className="text-[8px] px-2 py-0.5 rounded"
-                    style={{
-                      backgroundColor: `${tag.color}20`,
-                      color: tag.color,
-                    }}
+      <Card className="w-[400px]">
+        <CardTitle className="px-6 pt-6">運営からのお知らせ</CardTitle>
+        <CardContent>
+          <ScrollArea className="h-full">
+            <div className="flex flex-col gap-3">
+              {Array.isArray(notices) && notices.length === 0 && (
+                <Card>
+                  <CardContent>お知らせはありません</CardContent>
+                </Card>
+              )}
+              {Array.isArray(notices) && notices.map(notice => (
+                <Sheet key={notice.id}>
+                  <SheetTrigger asChild>
+                    <Card className="cursor-pointer transition-shadow hover:shadow-md" onClick={() => setSelectedNotice(notice)}>
+                      <CardContent>
+                        <div className="flex items-center gap-2 mb-1">
+                          {Array.isArray(notice.tags) && notice.tags.map(tag => (
+                            <Badge
+                              key={tag.id}
+                              style={{
+                                backgroundColor: `${tag.color}20`,
+                                color: tag.color,
+                              }}
+                            >
+                              {tag.name}
+                            </Badge>
+                          ))}
+                        </div>
+                        <CardTitle className="text-sm font-bold mb-1">{notice.title}</CardTitle>
+                        <CardDescription className="text-xs">{notice.description}</CardDescription>
+                      </CardContent>
+                    </Card>
+                  </SheetTrigger>
+                  <SheetContent
+                    side="right"
+                    className='w-full sm:max-w-[600px]'
                   >
-                    {tag.name}
-                  </span>
-                ))}
-              </div>
-              <h3 className="text-[12px] font-bold text-gray-800 mb-1">{notice.title}</h3>
-              <p className="text-[10px] text-gray-600">{notice.description}</p>
+                    <SheetHeader>
+                      <SheetTitle>{notice.title}</SheetTitle>
+                      <SheetDescription>
+                        {detailLoading && "読み込み中..."}
+                        {detailError && `エラー: ${detailError}`}
+                      </SheetDescription>
+                    </SheetHeader>
+                    {selectedNotice?.id === notice.id && detail && <NoticeDetailSidePeakChildren notice={detail} />}
+                  </SheetContent>
+                </Sheet>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-      <SidePeak isOpen={isOpen} onClose={closeSidePeak}>
-        {detailLoading && <div>読み込み中...</div>}
-        {detailError && <div className="text-red-500">{detailError}</div>}
-        {detail && <NoticeDetailSidePeakChildren notice={detail} />}
-      </SidePeak>
+          </ScrollArea>
+        </CardContent>
+      </Card>
     </>
   );
 }

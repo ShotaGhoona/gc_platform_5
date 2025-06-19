@@ -75,6 +75,16 @@ import {
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
 import { Info, CheckCircle2, AlertTriangle, XCircle, Loader2, Mail, Search, Eye, EyeOff, Bell } from "lucide-react"
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink,
+  NavigationMenuIndicator,
+  NavigationMenuViewport
+} from "@/components/ui/navigation-menu"
 import { Calendar } from "@/components/ui/calendar"
 import { useState } from "react"
 import { addDays } from "date-fns"
@@ -82,6 +92,95 @@ import { addDays } from "date-fns"
 export default function TestPage() {
   return (
     <div className="p-8 grid grid-cols-3 gap-4">
+      {/* NavigationMenu Demo */}
+      <div className="bg-white p-8 shadow-md rounded-lg col-span-3">
+        <h2 className="text-2xl font-bold mb-4">NavigationMenu Demo</h2>
+        <div className="space-y-8">
+          {/* シンプル */}
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/" className="font-bold">ホーム</NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/about">About</NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/contact">Contact</NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          {/* ドロップダウン（メガメニュー風） */}
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>製品</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 w-[300px]">
+                    <li>
+                      <NavigationMenuLink href="/products/a" className="font-bold">製品A</NavigationMenuLink>
+                      <div className="text-xs text-gray-500">Aの説明</div>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="/products/b" className="font-bold">製品B</NavigationMenuLink>
+                      <div className="text-xs text-gray-500">Bの説明</div>
+                    </li>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>サービス</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 w-[200px]">
+                    <li>
+                      <NavigationMenuLink href="/service/1">サービス1</NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="/service/2">サービス2</NavigationMenuLink>
+                    </li>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/company">会社情報</NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+            <NavigationMenuIndicator />
+            <NavigationMenuViewport />
+          </NavigationMenu>
+          {/* アイコン付き */}
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/">
+                  <span className="flex items-center gap-1">
+                    <Bell className="w-4 h-4" /> 通知
+                  </span>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>
+                  <span className="flex items-center gap-1">
+                    <Mail className="w-4 h-4" /> メール
+                  </span>
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="p-4">
+                    <li>
+                      <NavigationMenuLink href="/mail/inbox">受信箱</NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink href="/mail/sent">送信済み</NavigationMenuLink>
+                    </li>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+            <NavigationMenuIndicator />
+            <NavigationMenuViewport />
+          </NavigationMenu>
+        </div>
+      </div>
       {/* Button Demo */}
       <div className="bg-white p-8 shadow-md rounded-lg col-span-1">
         <h2 className="text-2xl font-bold mb-4">Button Demo</h2>
@@ -795,7 +894,7 @@ export default function TestPage() {
         </div>
       </div>
       {/* Card Demo */}
-      <div className="bg-white p-8 shadow-md rounded-lg col-span-3">
+      <div className="bg-background p-8 shadow-md rounded-lg col-span-3">
         <h2 className="text-2xl font-bold mb-4">Card Demo</h2>
         <div className="grid grid-cols-3 gap-6">
           {/* 基本カード */}
