@@ -1,7 +1,6 @@
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import CommonButton from "@/components/common/commonButton";
 import { FaEdit, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa";
 
 type Props = {
   onClose: () => void;

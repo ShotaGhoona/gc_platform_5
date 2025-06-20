@@ -14,12 +14,12 @@ type Props = {
 };
 
 export const DetailProfileForm = ({
-  profile,
+  // profile,
   selectedInterests,
   selectedCoreSkills,
   onChangeInterests,
   onChangeCoreSkills,
-  isLoading,
+  // isLoading,
   error,
 }: Props) => {
   const { interests, coreSkills } = useInterestCoreskillTags();
@@ -45,7 +45,7 @@ export const DetailProfileForm = ({
       {/* What I'm Into */}
       <div className="space-y-4">
         <label className="block text-base font-bold text-gray-700">
-          What I'm Into
+          What I&apos;m Into
         </label>
         <div className="flex flex-wrap gap-2">
           {interests.map((interest) => (

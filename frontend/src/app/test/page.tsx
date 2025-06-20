@@ -74,7 +74,7 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
-import { Info, CheckCircle2, AlertTriangle, XCircle, Loader2, Mail, Search, Eye, EyeOff, Bell } from "lucide-react"
+import { Info, CheckCircle2, AlertTriangle, XCircle, Loader2, Mail, Search, Eye, Bell } from "lucide-react"
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -89,7 +89,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { useState } from "react"
 import { addDays } from "date-fns"
 
-export default function TestPage() {
+export const dynamic = 'force-dynamic';\n\nexport default function TestPage() {
   return (
     <div className="p-8 grid grid-cols-3 gap-4">
       {/* NavigationMenu Demo */}
@@ -998,7 +998,7 @@ export default function TestPage() {
             </PopoverTrigger>
             <PopoverContent side="right" className="w-48">
               <div className="font-bold mb-2">右側Popover</div>
-              <div className="text-xs text-gray-500">side="right"で右側に表示</div>
+              <div className="text-xs text-gray-500">side=&quot;right&quot;で右側に表示</div>
             </PopoverContent>
           </Popover>
         </div>

@@ -15,8 +15,8 @@ type Props = {
 };
 
 export const BasicProfileForm = ({
-  profile,
-  isLoading,
+  // profile,
+  // isLoading,
   error,
   setAvatar,
   avatarFile,

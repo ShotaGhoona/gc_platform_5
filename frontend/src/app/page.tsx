@@ -1,10 +1,11 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { SignOutButton } from "@clerk/nextjs";
+import Link from "next/link";
+
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const { userId } = await auth();
-  const user = await currentUser();
 
   // ログイン済みの場合はダッシュボードへリダイレクト
   if (userId) {
@@ -74,12 +75,12 @@ export default async function Home() {
         <img src="/svg/jpmap.svg" alt="日本地図" className="w-64 h-40" />
       </div>
       {/* CTA */}
-      <a
+      <Link
         href="/sign-in"
         className="mt-12 bg-[#D68897] hover:bg-[#c06a7a] text-white text-2xl font-bold px-16 py-5 rounded-full shadow-lg transition-colors"
       >
         今すぐはじめる
-      </a>
+      </Link>
       {/* フッター */}
       <div className="absolute bottom-4 text-white/70 text-sm">© {new Date().getFullYear()} Ghoona Camp</div>
     </div>

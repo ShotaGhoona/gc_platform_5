@@ -19,7 +19,7 @@ export const useProfileDetail = (userId: string | null, viewerId?: string) => {
         setProfile(data);
         setError(null);
       })
-      .catch((e) => {
+      .catch(() => {
         setError("プロフィール詳細の取得に失敗しました");
         setProfile(null);
       })
