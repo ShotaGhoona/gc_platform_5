@@ -14,16 +14,16 @@ export type ExternalEvent = {
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
-  tags: ExternalEventTag[];
+  tags: string[];
   hostUserId: string;
   hostUserName: string;
   hostAvatarImageUrl: string;
 };
 
-export async function fetchExternalEventList(tagIds?: number[]): Promise<ExternalEvent[]> {
+export async function fetchExternalEventList(tagNames?: string[]): Promise<ExternalEvent[]> {
   let url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/external_events`;
-  if (tagIds && tagIds.length > 0) {
-    url += `?tag_ids=${tagIds.join(",")}`;
+  if (tagNames && tagNames.length > 0) {
+    url += `?tag_names=${tagNames.join(",")}`;
   }
   const res = await fetch(url);
   if (!res.ok) throw new Error("イベント一覧の取得に失敗しました");
@@ -58,7 +58,7 @@ export type ExternalEventCreate = {
   startAt: string;
   endAt: string;
   hostUserId: string;
-  tagIds: number[];
+  tags: string[];
 };
 
 export async function createExternalEvent(event: ExternalEventCreate): Promise<ExternalEvent> {
@@ -72,7 +72,7 @@ export async function createExternalEvent(event: ExternalEventCreate): Promise<E
       start_at: event.startAt,
       end_at: event.endAt,
       host_user_id: event.hostUserId,
-      tag_ids: event.tagIds,
+      tags: event.tags,
     }),
   });
   if (!res.ok) throw new Error("イベントの作成に失敗しました");
@@ -102,10 +102,19 @@ export async function deleteExternalEvent(eventId: number): Promise<void> {
 }
 
 export async function updateExternalEvent(eventId: number, input: Partial<ExternalEventCreate>): Promise<ExternalEvent> {
+  const requestBody: any = {};
+  if (input.title !== undefined) requestBody.title = input.title;
+  if (input.description !== undefined) requestBody.description = input.description;
+  if (input.image !== undefined) requestBody.image = input.image;
+  if (input.startAt !== undefined) requestBody.start_at = input.startAt;
+  if (input.endAt !== undefined) requestBody.end_at = input.endAt;
+  if (input.hostUserId !== undefined) requestBody.host_user_id = input.hostUserId;
+  if (input.tags !== undefined) requestBody.tags = input.tags;
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/external_events/${eventId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
+    body: JSON.stringify(requestBody),
   });
   if (!res.ok) throw new Error("イベント編集に失敗しました");
   const data = await res.json();

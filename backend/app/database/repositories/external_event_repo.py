@@ -1,5 +1,5 @@
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import or_, and_
+from sqlalchemy.orm import Session
+from sqlalchemy import or_, and_, func
 from app.database.models.externalEvent import ExternalEvent, ExternalEventTag
 from app.database.models.user import User
 
@@ -7,10 +7,17 @@ class ExternalEventRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_event_list(self, tag_ids=None, keyword=None, date_from=None, date_to=None):
-        q = self.db.query(ExternalEvent).options(joinedload(ExternalEvent.tags))
-        if tag_ids:
-            q = q.join(ExternalEvent.tags).filter(ExternalEventTag.id.in_(tag_ids))
+    def get_event_list(self, tag_names=None, keyword=None, date_from=None, date_to=None):
+        q = self.db.query(ExternalEvent)
+        
+        # タグ名での配列検索（PostgreSQLの配列演算子を使用）
+        if tag_names:
+            # tags_arrayの中に指定されたタグ名のいずれかが含まれているかチェック
+            tag_conditions = []
+            for tag_name in tag_names:
+                tag_conditions.append(func.array_position(ExternalEvent.tags_array, tag_name).isnot(None))
+            q = q.filter(or_(*tag_conditions))
+            
         if keyword:
             q = q.filter(or_(
                 ExternalEvent.title.ilike(f"%{keyword}%"),
@@ -45,7 +52,7 @@ class ExternalEventRepository:
                 "created_at": e.created_at,
                 "updated_at": e.updated_at,
                 "deleted_at": e.deleted_at,
-                "tags": [t for t in e.tags],
+                "tags": e.tags_array if e.tags_array else [],
                 "host_user_id": e.host_user_id,
                 "host_user_name":  user.profile.username if user and user.profile else "",
                 "host_avatar_image_url": user.profile.avatar_image_url if user and user.profile else "",
@@ -55,18 +62,16 @@ class ExternalEventRepository:
     def get_event_detail(self, event_id: int):
         return self.db.query(ExternalEvent).filter(ExternalEvent.id == event_id, ExternalEvent.deleted_at == None).first()
 
-    def create_event(self, event, tag_ids):
+    def create_event(self, event, tags):
         db_event = ExternalEvent(
             title=event.title,
             description=event.description,
             image=event.image,
             host_user_id=event.host_user_id,
+            tags_array=tags if tags else [],
             start_at=event.start_at,
             end_at=event.end_at,
         )
-        if tag_ids:
-            tags = self.db.query(ExternalEventTag).filter(ExternalEventTag.id.in_(tag_ids)).all()
-            db_event.tags = tags
         self.db.add(db_event)
         self.db.commit()
         self.db.refresh(db_event)

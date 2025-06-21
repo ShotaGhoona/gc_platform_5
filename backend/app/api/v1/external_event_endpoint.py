@@ -14,19 +14,19 @@ from typing import Optional
 from datetime import datetime
 
 # ギャラリービュー用イベントリスト
-@router.get("/external_events", response_model=list[ExternalEvent])
+@router.get("/external_events")
 def api_get_event_list(
     db: Session = Depends(get_db),
-    tag_ids: Optional[str] = None,
+    tag_names: Optional[str] = None,
     keyword: Optional[str] = None,
     date_from: Optional[datetime] = None,
     date_to: Optional[datetime] = None,
 ):
-    tag_id_list = [int(t) for t in tag_ids.split(",")] if tag_ids else None
-    return get_event_list(db, tag_id_list, keyword, date_from, date_to)
+    tag_name_list = [t.strip() for t in tag_names.split(",")] if tag_names else None
+    return get_event_list(db, tag_name_list, keyword, date_from, date_to)
 
 # 詳細取得（サイドピーク用）
-@router.get("/external_events/{event_id}", response_model=ExternalEvent)
+@router.get("/external_events/{event_id}")
 def api_get_event_detail(event_id: int, db: Session = Depends(get_db)):
     event = get_event_detail(db, event_id)
     if not event:
@@ -34,12 +34,12 @@ def api_get_event_detail(event_id: int, db: Session = Depends(get_db)):
     return event
 
 # 追加
-@router.post("/external_events", response_model=ExternalEvent)
+@router.post("/external_events")
 def api_create_event(event: ExternalEventCreate, db: Session = Depends(get_db)):
     return create_event(db, event)
 
 # 編集
-@router.patch("/external_events/{event_id}", response_model=ExternalEvent)
+@router.patch("/external_events/{event_id}")
 def api_update_event(event_id: int, event: dict, db: Session = Depends(get_db)):
     from app.services.external_event_service import update_event
     return update_event(db, event_id, event)

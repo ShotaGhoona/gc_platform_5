@@ -48,30 +48,32 @@ Ghoona Camp（朝活アプリ）のデータベース仕様書です。本アプ
 | vision | String(120) | nullable | ビジョン |
 | bio | String(120) | nullable | 自己紹介 |
 | one_line_profile | String(120) | nullable | 一行プロフィール |
-| personal_color | String(60) | nullable | パーソナルカラー |
 | background | Text | nullable | 背景情報 |
 | avatar_image_url | Text | nullable | アバター画像URL |
+| interests_array | TEXT[] | nullable | 興味・関心配列 |
+| core_skills_array | TEXT[] | nullable | コアスキル配列 |
 | created_at | DateTime | DEFAULT now() | 作成日時 |
 | updated_at | DateTime | onupdate now() | 更新日時 |
 | deleted_at | DateTime | nullable | 削除日時（論理削除） |
 
 **リレーション:**
 - user: 1対1（User）
-- interests: 多対多（Interest）- 興味・関心
-- core_skills: 多対多（CoreSkill）- コアスキル  
 - sns: 多対多（SNS）- SNSアカウント
 - rivals: 多対多（Profile）- ライバル関係
 
 #### 関連テーブル
-- **interests**: 興味・関心マスター（id, name, color）
-- **core_skills**: コアスキルマスター（id, name, color, icon）
+- **interests**: 興味・関心マスター（id, name, color）※UI選択肢用
+- **core_skills**: コアスキルマスター（id, name, color, icon）※UI選択肢用
 - **sns**: SNSマスター（id, name）
 
 #### 中間テーブル
-- **profile_interest**: プロフィール⇔興味
-- **profile_core_skill**: プロフィール⇔コアスキル
 - **profile_sns**: プロフィール⇔SNS（link, description付き）
 - **profile_rival**: プロフィール⇔ライバル
+
+**注意事項:**
+- interests/core_skillsは配列型で直接保存（文字列配列）
+- interests/core_skillsテーブルはUI選択肢表示用のマスターとして残存
+- カスタム入力値も配列に含めて保存可能
 
 ---
 
@@ -112,6 +114,7 @@ Ghoona Camp（朝活アプリ）のデータベース仕様書です。本アプ
 | description | Text | nullable | イベント説明 |
 | host_user_id | String | FK(users.clerk_id) | 主催者ID |
 | image | String | nullable | イベント画像URL |
+| tags_array | TEXT[] | nullable | タグ配列 |
 | start_at | DateTime | NOT NULL | 開始日時 |
 | end_at | DateTime | NOT NULL | 終了日時 |
 | created_at | DateTime | DEFAULT now() | 作成日時 |
@@ -119,11 +122,15 @@ Ghoona Camp（朝活アプリ）のデータベース仕様書です。本アプ
 | deleted_at | DateTime | nullable | 削除日時（論理削除） |
 
 **リレーション:**
-- tags: 多対多（ExternalEventTag）
+- host_user: 多対1（User）- 主催者
 
 #### 関連テーブル
-- **external_event_tags**: 外部イベントタグマスター（id, name, color）
-- **external_event_on_tags**: 外部イベント⇔タグ中間テーブル
+- **external_event_tags**: 外部イベントタグマスター（id, name, color）※UI選択肢用
+
+**注意事項:**
+- タグは配列型で直接保存（文字列配列）
+- external_event_tagsテーブルはUI選択肢表示用のマスターとして残存
+- カスタムタグも配列に含めて保存可能
 
 ---
 

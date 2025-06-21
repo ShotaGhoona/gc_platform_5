@@ -55,16 +55,15 @@ export const ExternalEventDetailSidePeakChildren = ({ event, onEditClick, onDele
         )}
         {/* タグ */}
         <div className="flex items-center gap-2">
-          {event.tags.map((tag) => (
+          {event.tags.map((tagName, index) => (
             <span
-            key={tag.id}
-            className="text-xs px-2 py-1 rounded"
+            key={index}
+            className="text-xs px-2 py-1 rounded bg-gray-200"
             style={{
-              backgroundColor: `${tag.color}`,
               color: "gray",
             }}
             >
-              {tag.name}
+              {tagName}
             </span>
           ))}
         </div>
