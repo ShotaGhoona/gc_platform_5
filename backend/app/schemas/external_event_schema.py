@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 from datetime import datetime
 
@@ -7,8 +7,7 @@ class ExternalEventTag(BaseModel):
     name: str
     color: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ExternalEventBase(BaseModel):
     title: str
@@ -29,5 +28,4 @@ class ExternalEvent(ExternalEventBase):
     deleted_at: Optional[datetime]
     tags: List[str]
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

@@ -69,7 +69,7 @@ def create_event(db: Session, event_create: ExternalEventCreate):
 def get_tag_list(db: Session):
     repo = ExternalEventRepository(db)
     tags = repo.get_tag_list()
-    return [ExternalEventTag.from_orm(t) for t in tags]
+    return [ExternalEventTag.model_validate(t) for t in tags]
 
 def update_event(db: Session, event_id: int, data: dict):
     repo = ExternalEventRepository(db)

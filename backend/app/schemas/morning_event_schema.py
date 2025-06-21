@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 
 class MorningEventTag(BaseModel):
@@ -6,8 +6,7 @@ class MorningEventTag(BaseModel):
     name: str
     color: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class MorningEventParticipant(BaseModel):
     user_id: str
