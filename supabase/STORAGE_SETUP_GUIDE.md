@@ -5,6 +5,7 @@
 
 ## 1. ストレージバケットの作成
 
+### avatarsバケット（プロフィール画像用）
 1. Supabaseダッシュボードにログイン
 2. **Storage** > **Buckets** に移動
 3. **New bucket** をクリック
@@ -14,29 +15,62 @@
    - **File size limit**: `50MB`
    - **Allowed MIME types**: `image/*`
 
+### external-event-thumnailバケット（外部イベント画像用）
+1. **Storage** > **Buckets** で再度 **New bucket** をクリック
+2. 以下の設定で作成：
+   - **Name**: `external-event-thumnail`
+   - **Public bucket**: ✅ ON（チェックを入れる）
+   - **File size limit**: `50MB`
+   - **Allowed MIME types**: `image/*`
+
 ## 2. ストレージポリシーの設定
 
+### avatarsバケット用ポリシー
 1. **Storage** > **Policies** に移動
 2. **avatars** バケットを選択
 3. 以下の4つのポリシーを作成：
 
-### ポリシー1: パブリック読み取り
+#### ポリシー1: パブリック読み取り
 - **Policy name**: `Public Access`
 - **Allowed operation**: `SELECT`
 - **Policy definition**: `true`
 
-### ポリシー2: 認証ユーザーのアップロード
+#### ポリシー2: 認証ユーザーのアップロード
 - **Policy name**: `Authenticated users can upload avatars`
 - **Allowed operation**: `INSERT`
 - **Policy definition**: `true`
 
-### ポリシー3: 認証ユーザーの更新
+#### ポリシー3: 認証ユーザーの更新
 - **Policy name**: `Authenticated users can update avatars`
 - **Allowed operation**: `UPDATE`
 - **Policy definition**: `true`
 
-### ポリシー4: 認証ユーザーの削除
+#### ポリシー4: 認証ユーザーの削除
 - **Policy name**: `Authenticated users can delete avatars`
+- **Allowed operation**: `DELETE`
+- **Policy definition**: `true`
+
+### external-event-thumnailバケット用ポリシー
+1. **Storage** > **Policies** で **external-event-thumnail** バケットを選択
+2. 以下の4つのポリシーを作成：
+
+#### ポリシー1: パブリック読み取り
+- **Policy name**: `Public Access for External Events`
+- **Allowed operation**: `SELECT`
+- **Policy definition**: `true`
+
+#### ポリシー2: 認証ユーザーのアップロード
+- **Policy name**: `Authenticated users can upload external event images`
+- **Allowed operation**: `INSERT`
+- **Policy definition**: `true`
+
+#### ポリシー3: 認証ユーザーの更新
+- **Policy name**: `Authenticated users can update external event images`
+- **Allowed operation**: `UPDATE`
+- **Policy definition**: `true`
+
+#### ポリシー4: 認証ユーザーの削除
+- **Policy name**: `Authenticated users can delete external event images`
 - **Allowed operation**: `DELETE`
 - **Policy definition**: `true`
 

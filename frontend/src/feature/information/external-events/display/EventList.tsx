@@ -12,15 +12,15 @@ export default function EventList({ onEventClick }: Props) {
   const [events, setEvents] = useState<ExternalEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { selectedTagIds } = useExternalEventFilter();
+  const { selectedTagNames } = useExternalEventFilter();
 
   useEffect(() => {
     setLoading(true);
-    fetchExternalEventList(selectedTagIds)
+    fetchExternalEventList(selectedTagNames)
       .then(setEvents)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [selectedTagIds]);
+  }, [selectedTagNames]);
 
   if (loading) {
     return <div>Loading...</div>;

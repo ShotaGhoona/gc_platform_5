@@ -19,7 +19,7 @@ class ExternalEventBase(BaseModel):
 
 class ExternalEventCreate(ExternalEventBase):
     host_user_id: str
-    tag_ids: List[int]
+    tags: List[str]
 
 class ExternalEvent(ExternalEventBase):
     id: int
@@ -27,7 +27,7 @@ class ExternalEvent(ExternalEventBase):
     created_at: datetime
     updated_at: Optional[datetime]
     deleted_at: Optional[datetime]
-    tags: List[ExternalEventTag]
+    tags: List[str]
 
     class Config:
         orm_mode = True

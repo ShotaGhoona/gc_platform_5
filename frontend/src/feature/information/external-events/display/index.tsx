@@ -64,7 +64,7 @@ export default function IndexPage() {
                   onClick={() => {}}
                 />
               </DialogTrigger>
-              <DialogContent className="w-[1000px]">
+              <DialogContent className="w-[300px] md:min-w-[1000px]">
                 <AddExternalEventPopUpChildren
                   onClose={() => {}}
                 />
@@ -80,7 +80,7 @@ export default function IndexPage() {
       </div>
       {/* 詳細サイドピーク */}
       <Sheet open={isRefetchOpen} onOpenChange={setIsRefetchOpen}>
-        <SheetContent side="right" className="w-[600px]">
+        <SheetContent side="right" className="w-[800px]">
           {selectedEvent && !isEditEventOpen && (
             <ExternalEventDetailSidePeakChildren
               event={selectedEvent}
@@ -97,7 +97,7 @@ export default function IndexPage() {
 
       {/* Edit Event Dialog */}
       <Dialog open={isEditEventOpen} onOpenChange={setIsEditEventOpen}>
-        <DialogContent>
+        <DialogContent className="w-[300px] md:min-w-[1000px]">
           {selectedEvent && (
             <EditExternalEventPopUpChildren
               event={selectedEvent}
@@ -109,7 +109,7 @@ export default function IndexPage() {
       
       {/* Profile Dialog */}
       <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
-        <DialogContent>
+        <DialogContent className="w-[300px] md:min-w-[1000px]">
           {selectedEvent?.hostUserId && <ProfileDetailPopUpChildren userId={selectedEvent.hostUserId} />}
         </DialogContent>
       </Dialog>

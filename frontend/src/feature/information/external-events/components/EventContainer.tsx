@@ -19,13 +19,12 @@ export default function EventContainer({ event, onClick }: Props) {
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-gray-100 rounded-lg"></div>
       <div className="h-full flex flex-col justify-between p-5 z-1">
         <div className="flex gap-2 flex-wrap">
-            {event.tags.map((tag) => (
+            {event.tags.map((tagName, index) => (
               <div
-              key={tag.id}
-              className="rounded-lg px-2 py-1 text-[10px]"
-              style={{ backgroundColor: tag.color || "#eee" }}
+              key={index}
+              className="rounded-lg px-2 py-1 text-[10px] bg-gray-200"
               >
-                {tag.name}
+                {tagName}
               </div>
             ))}
         </div>

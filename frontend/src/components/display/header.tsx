@@ -68,7 +68,7 @@ export default function Header() {
         <span className="text-header-text-muted text-sm font-bold">{subTitle}</span>
       </div>
       <div className="flex items-center gap-4 relative">
-        <ThemeToggle />
+        {/* <ThemeToggle /> */}
         <span className="text-header-text-secondary font-bold">{profile?.username}</span>
         <img
           src={

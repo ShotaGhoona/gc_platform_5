@@ -168,6 +168,7 @@ CREATE TABLE external_events (
     description TEXT,
     host_user_id VARCHAR(255) NOT NULL REFERENCES users(clerk_id) ON DELETE CASCADE,
     image VARCHAR(255),
+    tags_array TEXT[],
     start_at TIMESTAMPTZ NOT NULL,
     end_at TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -178,14 +179,6 @@ CREATE TABLE external_events (
 CREATE INDEX idx_external_events_host_user_id ON external_events(host_user_id);
 CREATE INDEX idx_external_events_start_at ON external_events(start_at);
 CREATE INDEX idx_external_events_deleted_at ON external_events(deleted_at);
-
--- external_event_on_tags（外部イベント⇔タグ中間テーブル）
-CREATE TABLE external_event_on_tags (
-    id SERIAL PRIMARY KEY,
-    external_event_id INTEGER NOT NULL REFERENCES external_events(id) ON DELETE CASCADE,
-    external_event_tag_id INTEGER NOT NULL REFERENCES external_event_tags(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
 
 -- monthly_goals（月間目標）
 CREATE TABLE monthly_goals (
@@ -515,9 +508,9 @@ INSERT INTO attendance_flags (user_id, date, six_clock_flag) VALUES
 ('user_2wqs4h1PsScPc5GkefezBEMSern', '2024-12-21', true);
 
 -- external_events（外部イベント）
-INSERT INTO external_events (title, description, host_user_id, start_at, end_at) VALUES
-('Tokyo Tech Conference 2024', '東京で開催される技術カンファレンス', 'user_2wtwwJvnm8m9ofGrCzM8xEgX242', '2024-12-28 10:00:00+09', '2024-12-28 18:00:00+09'),
-('Startup Pitch Night', 'スタートアップのピッチイベント', 'user_2wqs4h1PsScPc5GkefezBEMSern', '2024-12-30 19:00:00+09', '2024-12-30 22:00:00+09');
+INSERT INTO external_events (title, description, host_user_id, tags_array, start_at, end_at) VALUES
+('Tokyo Tech Conference 2024', '東京で開催される技術カンファレンス', 'user_2wtwwJvnm8m9ofGrCzM8xEgX242', ARRAY['カンファレンス', 'テクノロジー'], '2024-12-28 10:00:00+09', '2024-12-28 18:00:00+09'),
+('Startup Pitch Night', 'スタートアップのピッチイベント', 'user_2wqs4h1PsScPc5GkefezBEMSern', ARRAY['ネットワーキング', 'スタートアップ'], '2024-12-30 19:00:00+09', '2024-12-30 22:00:00+09');
 
 -- system_notices（システム通知）
 INSERT INTO system_notices (title, description, image_url, publish_start_at, publish_end_at) VALUES
