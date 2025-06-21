@@ -4,8 +4,7 @@ import VisionSettingChatContainer from "./VisionSettingChatContainer";
 import SaveVisionContainer from "./SaveVisionContainer";
 import VisionIdeaContainer from "./VisionIdeaContainer";
 import { useVisionSettingChat } from "../hooks/useVisionSettingChat";
-import { PopUp } from "@/components/display/PopUp";
-import { usePopUp } from "@/hooks/usePopUp";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import VisionSettingWaySelectPopUpChildren from "../components/VisionSettingWaySelectPopUpChildren";
 import VisionPageExplainPopUpChildren from "../components/VisionPageExplainPopUpChildren";
 import VisionConfirmPopUpChildren from "../components/VisionConfirmPopUpChildren";
@@ -23,17 +22,14 @@ export default function IndexPage() {
     handleSend,
   } = useVisionSettingChat();
 
-  const { isOpen, openPopUp, closePopUp } = usePopUp();
-  const handleClosePopUp = () => {
-    closePopUp();
-    setPopUpStep("way");
+  // Dialog state management
+  const [isWayDialogOpen, setIsWayDialogOpen] = useState(false);
+  const [isExplainDialogOpen, setIsExplainDialogOpen] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  
+  const handleOpenExplainDialog = () => {
+    setIsExplainDialogOpen(true);
   };
-  const handleOpenExplainPopUp = () => {
-    openPopUp();
-    setPopUpStep("explain");
-  };
-  // PopUpの中身切り替え用
-  const [popUpStep, setPopUpStep] = useState<"way" | "explain" | "confirm">("way");
 
   const [ideas, setIdeas] = useState<VisionIdea[]>([]);
   const handleSendWithIdeas = async () => {
@@ -66,8 +62,7 @@ export default function IndexPage() {
   };
 
   useEffect(() => {
-    setPopUpStep("way");
-    openPopUp();
+    setIsWayDialogOpen(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -103,26 +98,41 @@ export default function IndexPage() {
           </div>
         </div>
         </div>
-        <button className="text-gray-300 text-sm font-bold" onClick={handleOpenExplainPopUp}>
+        <button className="text-gray-300 text-sm font-bold" onClick={handleOpenExplainDialog}>
           使い方をもう一度見る
         </button>
       </div>
-      <PopUp isOpen={isOpen} onClose={closePopUp}>
-        {popUpStep === "way" && (
+      {/* Way Selection Dialog */}
+      <Dialog open={isWayDialogOpen} onOpenChange={setIsWayDialogOpen}>
+        <DialogContent>
           <VisionSettingWaySelectPopUpChildren
-            onSelectAI={() => setPopUpStep("explain")}
-            onSelectManual={() => setPopUpStep("confirm")}
+            onSelectAI={() => {
+              setIsWayDialogOpen(false);
+              setIsExplainDialogOpen(true);
+            }}
+            onSelectManual={() => {
+              setIsWayDialogOpen(false);
+              setIsConfirmDialogOpen(true);
+            }}
           />
-        )}
-        {popUpStep === "explain" && (
+        </DialogContent>
+      </Dialog>
+
+      {/* Explain Dialog */}
+      <Dialog open={isExplainDialogOpen} onOpenChange={setIsExplainDialogOpen}>
+        <DialogContent>
           <VisionPageExplainPopUpChildren
-            onClose={handleClosePopUp}
+            onClose={() => setIsExplainDialogOpen(false)}
           />
-        )}
-        {popUpStep === "confirm" && (
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm Dialog */}
+      <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
+        <DialogContent>
           <VisionConfirmPopUpChildren text="" />
-        )}
-      </PopUp>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

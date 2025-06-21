@@ -14,20 +14,17 @@ class ProfileRepository:
                 Profile.username,
                 Profile.avatar_image_url,
                 Profile.bio,
-                Profile.personal_color,
             )
             .all()
         )
 
     @staticmethod
     def get_member_detail(db: Session, user_id: str):
-        # Profile, User, interests, core_skills, sns
+        # Profile, User, sns（interests, core_skillsは配列で直接取得）
         profile = (
             db.query(Profile)
             .options(
                 joinedload(Profile.user),
-                joinedload(Profile.interests),
-                joinedload(Profile.core_skills),
                 joinedload(Profile.sns),
             )
             .filter(Profile.user_id == user_id)

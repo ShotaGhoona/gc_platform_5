@@ -1,10 +1,29 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { SignOutButton } from "@clerk/nextjs";
+import Link from "next/link";
+import { ArrowRight, Users, Calendar, Target, MessageCircle, Trophy, Sunrise, TrendingUp } from "lucide-react";
+import FeatureShowcase from "@/components/landing/FeatureShowcase";
+export const dynamic = 'force-dynamic';
+
+// Fetch user count from API
+async function getUserCount() {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/users/count`, {
+      cache: 'no-store'
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data.count;
+    }
+  } catch (error) {
+    console.error('Failed to fetch user count:', error);
+  }
+  return 34; // Fallback count
+}
 
 export default async function Home() {
   const { userId } = await auth();
-  const user = await currentUser();
+  const userCount = await getUserCount();
 
   // ログイン済みの場合はダッシュボードへリダイレクト
   if (userId) {
@@ -12,76 +31,149 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#ABBDD8] to-[#DFBEC4] relative">
-      {/* ロゴ＋キャッチ */}
-      <div className="flex items-center gap-4 mt-12">
-        <img src="/svg/logo.svg" alt="logo" className="w-14 h-14" />
-        <div>
-          <h1 className="text-4xl font-bold text-white drop-shadow">Ghoona Camp</h1>
-          <p className="text-lg text-white font-semibold drop-shadow">朝から今日から人生を豊かに</p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(59,130,246,0.15),rgba(255,255,255,0.8))]" />
+      <div className="absolute top-0 -left-4 w-96 h-96 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mix-blend-multiply filter blur-2xl opacity-10 animate-pulse" />
+      <div className="absolute top-0 -right-4 w-96 h-96 bg-gradient-to-r from-blue-500 to-blue-700 rounded-full mix-blend-multiply filter blur-2xl opacity-15 animate-pulse animation-delay-2000" />
+      <div className="absolute -bottom-8 left-20 w-96 h-96 bg-gradient-to-r from-blue-300 to-blue-500 rounded-full mix-blend-multiply filter blur-2xl opacity-12 animate-pulse animation-delay-4000" />
+      <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-gradient-to-r from-white to-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-1000" />
+      
+      <div className="relative z-10">
+        {/* Hero Section */}
+        <section className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
+          {/* Logo & Brand */}
+          <div className="group cursor-pointer mb-8 transform transition-all duration-500 hover:scale-105">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="relative">
+                <img src="/svg/logo.svg" alt="Ghoona Camp" className="w-16 h-16 transition-transform duration-300 group-hover:rotate-12" />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+              </div>
+              <div>
+                <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900 bg-clip-text text-transparent drop-shadow-sm">
+                  Ghoona Camp
+                </h1>
+                <p className="text-lg md:text-xl text-blue-700 font-semibold mt-1">
+                  朝から今日から人生を豊かに
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Message */}
+          <div className="max-w-4xl mb-12">
+            <h2 className="text-2xl md:text-4xl font-bold text-blue-900 mb-6 leading-tight">
+              <span className="inline-block hover:text-blue-600 transition-colors duration-300 cursor-default">早起きは三文の徳</span>を<br />
+              <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">現実にする</span>コミュニティ
+            </h2>
+            <p className="text-lg md:text-xl text-blue-700 leading-relaxed">
+              <span className="font-semibold text-blue-900">頑張りを習慣に、成長を日常に</span>するための環境がここにあります。
+            </p>
+          </div>
+
+          {/* Stats Bar */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 w-full max-w-2xl">
+            <div className="group bg-white/80 backdrop-blur-md border border-blue-200/50 rounded-2xl p-6 hover:bg-white/90 hover:border-blue-300 hover:shadow-xl transition-all duration-300 cursor-pointer">
+              <div className="flex items-center justify-center mb-2">
+                <Users className="w-8 h-8 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
+              <div className="text-3xl font-bold text-blue-900 mb-1">{userCount}</div>
+              <div className="text-sm text-blue-600">活動中のメンバー</div>
+            </div>
+            <div className="group bg-white/80 backdrop-blur-md border border-blue-200/50 rounded-2xl p-6 hover:bg-white/90 hover:border-blue-300 hover:shadow-xl transition-all duration-300 cursor-pointer">
+              <div className="flex items-center justify-center mb-2">
+                <Sunrise className="w-8 h-8 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
+              <div className="text-3xl font-bold text-blue-900 mb-1">6:00</div>
+              <div className="text-sm text-blue-600">毎朝の開始時間</div>
+            </div>
+            <div className="group bg-white/80 backdrop-blur-md border border-blue-200/50 rounded-2xl p-6 hover:bg-white/90 hover:border-blue-300 hover:shadow-xl transition-all duration-300 cursor-pointer">
+              <div className="flex items-center justify-center mb-2">
+                <TrendingUp className="w-8 h-8 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
+              <div className="text-3xl font-bold text-blue-900 mb-1">100%</div>
+              <div className="text-sm text-blue-600">成長実感率</div>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <Link
+            href="/sign-in"
+            className="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white text-xl font-bold px-12 py-4 rounded-full shadow-2xl hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 hover:rotate-1"
+          >
+            <span>今すぐ朝活をはじめる</span>
+            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
+          </Link>
+        </section>
+
+        {/* Features Section */}
+        <FeatureShowcase />
+
+        {/* Community Section */}
+        <section className="py-20 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h3 className="text-3xl md:text-4xl font-bold text-blue-900 mb-8">
+              全国の若者の朝を盛り上げる<br />
+              <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">オンラインコミュニティ</span>
+            </h3>
+            <p className="text-lg md:text-xl text-blue-700 leading-relaxed mb-12">
+              それぞれが夢や目標に本気で向き合っているからこそ、<br className="hidden md:block" />
+              自分も「よし、今日もがんばろう」って思える。<br />
+              <span className="font-semibold text-blue-900">同じ気持ちを共有できる仲間がいる時間は、毎日の原動力になります。</span>
+            </p>
+            
+            {/* Map & Stats */}
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-12 mb-12">
+              <div className="group cursor-pointer">
+                <img 
+                  src="/svg/jpmap.svg" 
+                  alt="日本全国のメンバー" 
+                  className="w-80 h-60 opacity-80 group-hover:opacity-100 transition-opacity duration-300 group-hover:scale-105 transform transition-transform duration-500" 
+                />
+                <p className="text-blue-600 mt-4 group-hover:text-blue-800 transition-colors duration-300">全国47都道府県から参加</p>
+              </div>
+              <div className="text-center">
+                <div className="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">
+                  {userCount}
+                </div>
+                <div className="text-xl md:text-2xl text-blue-900 font-semibold mb-4">人の仲間が活動中</div>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="bg-white/70 backdrop-blur-md border border-blue-200/50 rounded-lg p-3 shadow-sm">
+                    <div className="text-2xl font-bold text-blue-700">89%</div>
+                    <div className="text-blue-600">継続率</div>
+                  </div>
+                  <div className="bg-white/70 backdrop-blur-md border border-blue-200/50 rounded-lg p-3 shadow-sm">
+                    <div className="text-2xl font-bold text-blue-700">4.8</div>
+                    <div className="text-blue-600">満足度</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Final CTA */}
+            <div className="bg-gradient-to-r from-white/70 to-white/80 backdrop-blur-md border border-blue-200/50 rounded-3xl p-8 hover:from-white/80 hover:to-white/90 hover:shadow-xl transition-all duration-500">
+              <h4 className="text-2xl md:text-3xl font-bold text-blue-900 mb-4">
+                Don't hold back. Give it your all.
+              </h4>
+              <p className="text-lg text-blue-700 mb-8">あなたも今日から、朝活で人生を変えませんか？</p>
+              <Link
+                href="/sign-in"
+                className="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white text-lg font-bold px-10 py-3 rounded-full shadow-xl hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300"
+              >
+                <span>無料で参加する</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-8 text-center">
+          <div className="text-blue-600/70 text-sm hover:text-blue-800 transition-colors duration-300">
+            © {new Date().getFullYear()} Ghoona Camp - 朝から今日から人生を豊かに
+          </div>
+        </footer>
       </div>
-      {/* 公式サイト冒頭説明 */}
-      <div className="mt-8 max-w-2xl text-center">
-        <p className="text-white text-base md:text-lg font-semibold leading-relaxed drop-shadow">
-          早起きは三文の徳<br />
-          1000年前からあるこの言葉を知らない人はいません。<br />
-          しかし、それを日々実現している人はほんの一握りです。<br />
-          <span className="font-bold">Ghoona Campでは自己実現のための絶対的な手段</span>。<br />
-          頑張りを習慣に、成長を日常にするための環境を提供します。<br />
-        </p>
-        <p className="text-white text-2xl md:text-3xl font-bold mt-4 drop-shadow">
-          朝から、今日から、人生を豊かに。
-        </p>
-      </div>
-      {/* heroイラスト */}
-      <div className="w-full flex justify-center mt-8">
-        <img src="/svg/hero.svg" alt="hero" className="w-[400px] max-w-full" />
-      </div>
-      {/* 特徴3つ（公式サイト準拠） */}
-      <div className="flex flex-col md:flex-row gap-6 mt-10">
-        <div className="flex flex-col items-center bg-white/80 rounded-xl p-6 shadow-md w-64">
-          <img src="/svg/tier/sun_chaser.png" alt="朝活" className="w-16 h-16 mb-2" />
-          <p className="text-lg font-bold text-[#5D6B80]">毎朝6:00-8:00の朝活</p>
-          <p className="text-sm text-gray-600 text-center">朝の時間を有効活用し、やりたいことに集中できる</p>
-        </div>
-        <div className="flex flex-col items-center bg-white/80 rounded-xl p-6 shadow-md w-64">
-          <img src="/svg/tier/horizon_seeker.png" alt="有益情報" className="w-16 h-16 mb-2" />
-          <p className="text-lg font-bold text-[#5D6B80]">有益情報がたくさん</p>
-          <p className="text-sm text-gray-600 text-center">勉強・副業・運動など、仲間のノウハウや経験をシェア</p>
-        </div>
-        <div className="flex flex-col items-center bg-white/80 rounded-xl p-6 shadow-md w-64">
-          <img src="/svg/tier/solstice_staff.png" alt="仲間" className="w-16 h-16 mb-2" />
-          <p className="text-lg font-bold text-[#5D6B80]">刺激し合う仲間</p>
-          <p className="text-sm text-gray-600 text-center">夢や目標に本気な仲間と励まし合い、成長できる</p>
-        </div>
-      </div>
-      {/* コミュニティの雰囲気・メリット */}
-      <div className="max-w-4xl mx-auto mt-12 px-4">
-        <p className="text-white text-base md:text-lg leading-relaxed text-center drop-shadow">
-          Ghoona Campは、<span className="font-bold">全国の若者の朝を盛り上げるために作られたオンラインコミュニティ</span>です。<br />
-          みんなが自分の経験や気づきを惜しみなくシェアしてくれるから、参加しているだけでも自然と新しい知識が手に入ります。<br />
-          それぞれが夢や目標に本気で向き合っているからこそ、自分も「よし、今日もがんばろう」って思える。<br />
-          同じ気持ちを共有できる仲間がいる時間は、毎日の原動力になります。
-        </p>
-      </div>
-      {/* 参加人数＋地図 */}
-      <div className="flex flex-col md:flex-row items-center gap-8 mt-12">
-        <div className="flex flex-col items-center">
-          <p className="text-2xl font-bold text-white drop-shadow">現在の参加者</p>
-          <p className="text-6xl font-extrabold text-[#5D6B80] drop-shadow">1000<span className="text-2xl">人</span></p>
-        </div>
-        <img src="/svg/jpmap.svg" alt="日本地図" className="w-64 h-40" />
-      </div>
-      {/* CTA */}
-      <a
-        href="/sign-in"
-        className="mt-12 bg-[#D68897] hover:bg-[#c06a7a] text-white text-2xl font-bold px-16 py-5 rounded-full shadow-lg transition-colors"
-      >
-        今すぐはじめる
-      </a>
-      {/* フッター */}
-      <div className="absolute bottom-4 text-white/70 text-sm">© {new Date().getFullYear()} Ghoona Camp</div>
     </div>
   );
 }

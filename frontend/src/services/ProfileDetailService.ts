@@ -1,15 +1,3 @@
-export type Interest = {
-  id: number;
-  name: string;
-  color?: string;
-};
-
-export type CoreSkill = {
-  id: number;
-  name: string;
-  color?: string;
-  icon?: string;
-};
 
 export type Tier = {
   id: number;
@@ -33,8 +21,8 @@ export type MemberDetail = {
   background?: string;
   avatarImageUrl?: string;
   createdAt?: string;
-  interests: Interest[];
-  coreSkills: CoreSkill[];
+  interests: string[];
+  coreSkills: string[];
   tiers: Tier[];
   sns: Sns[];
   isRival?: boolean;

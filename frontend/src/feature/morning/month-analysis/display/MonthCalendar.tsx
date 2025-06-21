@@ -78,6 +78,7 @@ export default function MonthCalendar({ viewYear, viewMonth, events, onEventClic
             const dateStr = d ? `${viewYear}-${String(viewMonth).padStart(2, "0")}-${String(d).padStart(2, "0")}` : "";
             const isAttended = attendanceDays.includes(dateStr);
             return (
+              <div className="p-1">
               <div
                 key={idx}
                 className={`w-full h-full flex flex-col items-center p-1 relative rounded-[15px] border-5 border-white
@@ -104,6 +105,7 @@ export default function MonthCalendar({ viewYear, viewMonth, events, onEventClic
                       );
                     })}
                 </div>
+              </div>
               </div>
             );
           })}

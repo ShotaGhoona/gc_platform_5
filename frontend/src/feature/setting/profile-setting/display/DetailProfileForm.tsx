@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from "react";
 import { useInterestCoreskillTags } from "../hooks/useInterestCoreskillTags";
 import { ProfileResponse } from "../types/profile";
 
@@ -7,8 +8,12 @@ type Props = {
   profile: ProfileResponse | null;
   selectedInterests: number[];
   selectedCoreSkills: number[];
+  customInterests: string[];
+  customCoreSkills: string[];
   onChangeInterests: (ids: number[]) => void;
   onChangeCoreSkills: (ids: number[]) => void;
+  onChangeCustomInterests: (items: string[]) => void;
+  onChangeCustomCoreSkills: (items: string[]) => void;
   isLoading: boolean;
   error: string | null;
 };
@@ -17,12 +22,18 @@ export const DetailProfileForm = ({
   profile,
   selectedInterests,
   selectedCoreSkills,
+  customInterests,
+  customCoreSkills,
   onChangeInterests,
   onChangeCoreSkills,
+  onChangeCustomInterests,
+  onChangeCustomCoreSkills,
   isLoading,
   error,
 }: Props) => {
   const { interests, coreSkills } = useInterestCoreskillTags();
+  const [newInterest, setNewInterest] = useState("");
+  const [newCoreSkill, setNewCoreSkill] = useState("");
 
   const toggleInterest = (id: number) => {
     if (selectedInterests.includes(id)) {
@@ -40,6 +51,28 @@ export const DetailProfileForm = ({
     }
   };
 
+  const addCustomInterest = () => {
+    if (newInterest.trim() && !customInterests.includes(newInterest.trim())) {
+      onChangeCustomInterests([...customInterests, newInterest.trim()]);
+      setNewInterest("");
+    }
+  };
+
+  const removeCustomInterest = (item: string) => {
+    onChangeCustomInterests(customInterests.filter(i => i !== item));
+  };
+
+  const addCustomCoreSkill = () => {
+    if (newCoreSkill.trim() && !customCoreSkills.includes(newCoreSkill.trim())) {
+      onChangeCustomCoreSkills([...customCoreSkills, newCoreSkill.trim()]);
+      setNewCoreSkill("");
+    }
+  };
+
+  const removeCustomCoreSkill = (item: string) => {
+    onChangeCustomCoreSkills(customCoreSkills.filter(s => s !== item));
+  };
+
   return (
     <div className="space-y-8">
       {/* What I'm Into */}
@@ -47,6 +80,8 @@ export const DetailProfileForm = ({
         <label className="block text-base font-bold text-gray-700">
           What I'm Into
         </label>
+        
+        {/* 予定の選択肢 */}
         <div className="flex flex-wrap gap-2">
           {interests.map((interest) => (
             <button
@@ -63,12 +98,55 @@ export const DetailProfileForm = ({
             </button>
           ))}
         </div>
+
+        {/* カスタム項目表示 */}
+        {customInterests.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {customInterests.map((item, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 rounded-full text-sm bg-pink-500 text-white flex items-center gap-1"
+              >
+                {item}
+                <button
+                  type="button"
+                  onClick={() => removeCustomInterest(item)}
+                  className="text-white hover:text-pink-200 ml-1"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* 自由入力 */}
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={newInterest}
+            onChange={(e) => setNewInterest(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && addCustomInterest()}
+            placeholder="独自の興味・関心を追加"
+            className="flex-1 px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:border-pink-500"
+            maxLength={20}
+          />
+          <button
+            type="button"
+            onClick={addCustomInterest}
+            className="px-3 py-1 bg-pink-500 text-white rounded text-sm hover:bg-pink-600 transition-colors"
+          >
+            追加
+          </button>
+        </div>
       </div>
       {/* Core Skill Set */}
       <div className="space-y-4">
         <label className="block text-base font-bold text-gray-700">
           Core Skill Set
         </label>
+        
+        {/* 予定の選択肢 */}
         <div className="flex flex-wrap gap-2">
           {coreSkills.map((skill) => (
             <button
@@ -84,6 +162,47 @@ export const DetailProfileForm = ({
               {skill.name}
             </button>
           ))}
+        </div>
+
+        {/* カスタム項目表示 */}
+        {customCoreSkills.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {customCoreSkills.map((item, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 rounded-full text-sm bg-blue-500 text-white flex items-center gap-1"
+              >
+                {item}
+                <button
+                  type="button"
+                  onClick={() => removeCustomCoreSkill(item)}
+                  className="text-white hover:text-blue-200 ml-1"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* 自由入力 */}
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={newCoreSkill}
+            onChange={(e) => setNewCoreSkill(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && addCustomCoreSkill()}
+            placeholder="独自のスキルを追加"
+            className="flex-1 px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500"
+            maxLength={20}
+          />
+          <button
+            type="button"
+            onClick={addCustomCoreSkill}
+            className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
+          >
+            追加
+          </button>
         </div>
       </div>
       {/* SNSリンク */}

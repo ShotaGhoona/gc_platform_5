@@ -1,8 +1,7 @@
 import { GiConfirmed } from "react-icons/gi";
 import { FaTrash } from "react-icons/fa";
 import { VisionIdea } from "../types/visionSettingType";
-import { PopUp } from "@/components/display/PopUp";
-import { usePopUp } from "@/hooks/usePopUp";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import VisionConfirmPopUpChildren from "../components/VisionConfirmPopUpChildren";
 
 type Props = {
@@ -11,7 +10,6 @@ type Props = {
 };
 
 export default function SaveVisionContainer({ ideas, onBad }: Props) {
-  const { isOpen, selectedData, openPopUp, closePopUp } = usePopUp();
   if (!ideas || ideas.length === 0) return null;
   return (
     <>
@@ -34,22 +32,23 @@ export default function SaveVisionContainer({ ideas, onBad }: Props) {
                         <FaTrash className="text-gray-500 text-base" />
                         <p className="text-gray-500 text-xs font-bold">Delete</p>
                     </div>
-                    <div 
-                        onClick={() => openPopUp(idea.text)}
-                        className="bg-[#5D6B80] rounded-lg shadow-lg flex items-center justify-center gap-2 p-2 z-1"
-                    >
-                        <GiConfirmed className="text-white text-base" />
-                        <p className="text-white text-xs font-bold">Confirm</p>
-                    </div>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <div className="bg-[#5D6B80] rounded-lg shadow-lg flex items-center justify-center gap-2 p-2 z-1 cursor-pointer">
+                          <GiConfirmed className="text-white text-base" />
+                          <p className="text-white text-xs font-bold">Confirm</p>
+                        </div>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <VisionConfirmPopUpChildren text={idea.text} />
+                      </DialogContent>
+                    </Dialog>
                     </div>
                 </div>
                 </div>
             ))}
             </div>
         </div>
-        <PopUp isOpen={isOpen} onClose={closePopUp}>
-            {selectedData && <VisionConfirmPopUpChildren text={selectedData} />}
-        </PopUp>
     </>
   );
 }

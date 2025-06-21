@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { groups } from "@/components/constants/routes";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 type Profile = {
   username: string;
@@ -61,13 +62,14 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="w-full h-[45px] flex items-center justify-between px-4 bg-white shadow-lg z-10">
+    <header className="w-full h-[45px] flex items-center justify-between px-4 bg-header-bg shadow-lg z-10 border-b border-header-border">
       <div className="flex gap-4 items-end">
-        <h1 className="text-xl text-[#5D6B80] font-bold">{title}</h1>
-        <span className="text-gray-300 text-sm font-bold">{subTitle}</span>
+        <h1 className="text-xl text-header-text font-bold">{title}</h1>
+        <span className="text-header-text-muted text-sm font-bold">{subTitle}</span>
       </div>
       <div className="flex items-center gap-4 relative">
-        <span className="text-gray-600 font-bold">{profile?.username}</span>
+        {/* <ThemeToggle /> */}
+        <span className="text-header-text-secondary font-bold">{profile?.username}</span>
         <img
           src={
             profile?.avatar_image_url && profile.avatar_image_url !== "null"
@@ -75,7 +77,7 @@ export default function Header() {
               : "/images/profile/sampleProfileIcon.png"
           }
           alt={profile?.username}
-          className="w-[32px] h-[32px] rounded-full border border-gray-300 object-cover cursor-pointer"
+          className="w-[32px] h-[32px] rounded-full border border-header-avatar-border object-cover cursor-pointer"
           onClick={() => setOpen((v) => !v)}
         />
         {open && (
@@ -88,7 +90,7 @@ export default function Header() {
             />
             <div
               ref={ref}
-              className="absolute right-0 top-10 w-64 bg-white rounded-lg shadow-lg z-50 p-4 flex flex-col gap-2 z-50"
+              className="absolute right-0 top-10 w-64 bg-card rounded-lg shadow-lg z-50 p-4 flex flex-col gap-2 z-50 border border-border"
             >
               <div className="flex flex-col items-center gap-2 mb-4">
                 <img
@@ -98,15 +100,15 @@ export default function Header() {
                       : "/images/profile/sampleProfileIcon.png"
                   }
                   alt={profile?.username}
-                  className="w-16 h-16 rounded-full border border-gray-200 object-cover"
+                  className="w-16 h-16 rounded-full border border-header-avatar-border object-cover"
                 />
-                <span className="font-bold">{profile?.username}</span>
+                <span className="font-bold text-card-foreground">{profile?.username}</span>
                 {/* ここにOne-Line Profileやメールアドレスなど追加可 */}
               </div>
-              <Link href="/profile-setting" className="btn bg-[#5D6B80] rounded text-gray-50 font-bold text-center text-sm px-3 py-2">プロフィール編集</Link>
-              <Link href="/vision-setting" className="btn bg-[#5D6B80] rounded text-gray-50 font-bold text-center text-sm px-3 py-2">ビジョン設定</Link>
+              <Link href="/profile-setting" className="btn bg-primary rounded text-primary-foreground font-bold text-center text-sm px-3 py-2 hover:bg-primary/90 transition-colors">プロフィール編集</Link>
+              <Link href="/vision-setting" className="btn bg-primary rounded text-primary-foreground font-bold text-center text-sm px-3 py-2 hover:bg-primary/90 transition-colors">ビジョン設定</Link>
               <SignOutButton>
-                <button className="btn text-red-500 rounded px-3 py-1 w-full text-center">
+                <button className="btn text-destructive rounded px-3 py-1 w-full text-center hover:bg-destructive/10 transition-colors">
                   ログアウト
                 </button>
               </SignOutButton>

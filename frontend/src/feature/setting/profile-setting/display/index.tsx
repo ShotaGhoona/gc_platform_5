@@ -6,10 +6,12 @@ import { DetailProfileForm } from "./DetailProfileForm";
 import { SnsForm, SNS_TYPES } from "./SnsForm";
 import { useProfileForm } from "../hooks/useProfileForm";
 import { useProfileFormValidation } from "../hooks/useProfileFormValidation";
+import { useInterestCoreskillTags } from "../hooks/useInterestCoreskillTags";
 import { useUser } from "@clerk/nextjs";
 import { ProfileUpdateRequest } from "../types/profile";
 import { ProfilePreview } from "../components/Preview";
-import { supabase } from "../services/supabaseClient";
+import { useAuth } from "@clerk/nextjs";
+import { getSupabaseWithAuth, getSimpleSupabase } from "../services/supabaseClientWithAuth";
 import { useRouter } from "next/navigation";
 
 import CommonButton from "@/components/common/commonButton";
@@ -20,6 +22,7 @@ type Step = "basic" | "detail" | "sns" ;
 
 export default function ProfileSetting() {
   const { user } = useUser();
+  const { getToken } = useAuth();
   const [currentStep, setCurrentStep] = useState<Step>("basic");
   const {
     profile,
@@ -31,9 +34,16 @@ export default function ProfileSetting() {
     refetch,
   } = useProfileForm(user?.id || "");
 
+  // interest/coreSkillタグ一覧取得
+  const { interests, coreSkills } = useInterestCoreskillTags();
+
   // interest/coreSkill選択状態
   const [selectedInterests, setSelectedInterests] = useState<number[]>([]);
   const [selectedCoreSkills, setSelectedCoreSkills] = useState<number[]>([]);
+  
+  // カスタム項目
+  const [customInterests, setCustomInterests] = useState<string[]>([]);
+  const [customCoreSkills, setCustomCoreSkills] = useState<string[]>([]);
 
   // BasicProfileFormの編集値
   const [basicForm, setBasicForm] = useState<Partial<ProfileUpdateRequest>>({});
@@ -46,27 +56,33 @@ export default function ProfileSetting() {
 
   // profile取得時に初期選択状態・初期値を反映
   useEffect(() => {
-    if (profile) {
-      setSelectedInterests(
-        Array.isArray(profile.interests)
-          ? profile.interests.map((i: any) => typeof i === "object" ? i.id : i)
-          : []
-      );
-      setSelectedCoreSkills(
-        Array.isArray(profile.coreSkills)
-          ? profile.coreSkills.map((s: any) => typeof s === "object" ? s.id : s)
-          : []
-      );
+    if (profile && interests.length > 0 && coreSkills.length > 0) {
+      // 名前配列をID配列に変換
+      const interestIds = Array.isArray(profile.interests)
+        ? profile.interests.map((name: string) => {
+            const interest = interests.find(i => i.name === name);
+            return interest ? interest.id : null;
+          }).filter((id: any) => id !== null)
+        : [];
+      
+      const coreSkillIds = Array.isArray(profile.coreSkills)
+        ? profile.coreSkills.map((name: string) => {
+            const skill = coreSkills.find(s => s.name === name);
+            return skill ? skill.id : null;
+          }).filter((id: any) => id !== null)
+        : [];
+
+      setSelectedInterests(interestIds as number[]);
+      setSelectedCoreSkills(coreSkillIds as number[]);
       setBasicForm({
         username: profile.username,
         bio: profile.bio,
         one_line_profile: profile.oneLine ?? "",
         background: profile.background ?? "",
         avatar_image_url: profile.avatarImageUrl ?? "",
-        personal_color: profile.personalColor ?? "",
       });
     }
-  }, [profile]);
+  }, [profile?.username, profile?.bio, profile?.oneLine, profile?.background, profile?.avatarImageUrl]);
 
   const handleNextStep = () => {
     if (currentStep === "basic") setCurrentStep("detail");
@@ -117,7 +133,6 @@ export default function ProfileSetting() {
       ? URL.createObjectURL(avatarFile)
       : basicForm.avatar_image_url || profile?.avatarImageUrl || "",
     sns: snsList,
-    personalColor: basicForm.personal_color || profile?.personalColor || "",
   };
   const router = useRouter();
   // 確認画面で保存
@@ -131,22 +146,37 @@ export default function ProfileSetting() {
     let avatarUrl = basicForm.avatar_image_url || profile?.avatarImageUrl || '';
   
     if (avatarFile) {
-      const ext      = avatarFile.name.split('.').pop()?.toLowerCase() || 'png';
-      const filePath = `avatars/${user?.id}_${Date.now()}.${ext}`;
-  
-      const { error, data } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, avatarFile, { upsert: true });
-  
-      if (error) {
-        alert('画像アップロードに失敗しました: ' + error.message);
+      try {
+        // まずは簡単なSupabaseクライアントでテスト
+        const supabase = getSimpleSupabase();
+        const ext      = avatarFile.name.split('.').pop()?.toLowerCase() || 'png';
+        const filePath = `avatars/${user?.id}_${Date.now()}.${ext}`;
+    
+        console.log('アップロード開始:', filePath);
+        
+        const { error, data } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, avatarFile, { upsert: true });
+    
+        if (error) {
+          console.error('アップロードエラー:', error);
+          alert('画像アップロードに失敗しました: ' + error.message);
+          return;
+        }
+    
+        console.log('アップロード成功:', data);
+        
+        avatarUrl = supabase
+          .storage
+          .from('avatars')
+          .getPublicUrl(data.path).data.publicUrl;
+          
+        console.log('パブリックURL:', avatarUrl);
+      } catch (error) {
+        console.error('予期しないエラー:', error);
+        alert('予期しないエラーが発生しました: ' + error);
         return;
       }
-  
-      avatarUrl = supabase
-        .storage
-        .from('avatars')
-        .getPublicUrl(data.path).data.publicUrl;
     }
   
     // SNS_TYPESのidでidを割り当てる
@@ -155,11 +185,28 @@ export default function ProfileSetting() {
       return found ? found.id : 0;
     };
 
+    // ID配列を名前配列に変換し、カスタム項目と統合
+    const interestNames = [
+      ...selectedInterests.map(id => {
+        const interest = interests.find(i => i.id === id);
+        return interest ? interest.name : '';
+      }).filter(name => name),
+      ...customInterests
+    ];
+
+    const coreSkillNames = [
+      ...selectedCoreSkills.map(id => {
+        const skill = coreSkills.find(s => s.id === id);
+        return skill ? skill.name : '';
+      }).filter(name => name),
+      ...customCoreSkills
+    ];
+
     // バリデーションOK時のみAPI送信
     await save({
       ...basicForm,
-      interests: selectedInterests,
-      core_skills: selectedCoreSkills,
+      interests: interestNames,
+      core_skills: coreSkillNames,
       avatar_image_url: avatarUrl,
       sns: snsList
         .filter(s => s.type && s.link)
@@ -196,8 +243,12 @@ export default function ProfileSetting() {
                 profile={profile}
                 selectedInterests={selectedInterests}
                 selectedCoreSkills={selectedCoreSkills}
+                customInterests={customInterests}
+                customCoreSkills={customCoreSkills}
                 onChangeInterests={setSelectedInterests}
                 onChangeCoreSkills={setSelectedCoreSkills}
+                onChangeCustomInterests={setCustomInterests}
+                onChangeCustomCoreSkills={setCustomCoreSkills}
                 isLoading={isLoading}
                 error={error}
               />

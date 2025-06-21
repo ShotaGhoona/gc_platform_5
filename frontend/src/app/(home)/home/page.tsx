@@ -4,7 +4,7 @@ import Header from "@/components/display/header";
 
 export default function Home() {
   return (
-    <div className="flex bg-[#EEEEEE]">
+    <div className="flex bg-background">
         {/* <img
           src="/images/sign-in-bg.jpg"
           alt="home"

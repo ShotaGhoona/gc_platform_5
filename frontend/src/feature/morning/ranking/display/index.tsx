@@ -5,16 +5,27 @@ import StreakRanking from "./StreakRanking";
 import TopRankingThisMonth from "./TopRankingThisMonth";
 import MonthRangeChangeButton from "@/components/common/MonthRangeChangeButton";
 import { useState } from "react";
-import { PopUp } from "@/components/display/PopUp";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { ProfileDetailPopUpChildren } from "@/components/modal/ProfileDetailPopUpChildren";
-import { usePopUp } from "@/hooks/usePopUp";
+const ProfileDialog = ({ userId, children }: { userId: string; children: React.ReactNode }) => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent className="max-w-4xl">
+        <ProfileDetailPopUpChildren userId={userId} />
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 export default function IndexPage() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
-  const { isOpen, selectedData, openPopUp, closePopUp } = usePopUp();
 
   const handleProfileClick = (userId: string) => {
-    openPopUp(userId);
+    // This will be handled by the Dialog component
   };
 
   return (
@@ -25,19 +36,16 @@ export default function IndexPage() {
         </div>
         <div className="flex-1 flex gap-5 w-full min-h-0">
           <div className="bg-white w-full h-full rounded-lg shadow-md p-5">
-            <TopRankingThisMonth year={year} month={month} onProfileClick={handleProfileClick} rankingType="All" />
+            <TopRankingThisMonth year={year} month={month} onProfileClick={handleProfileClick} rankingType="All" ProfileDialog={ProfileDialog} />
           </div>
           <div className="bg-white w-full h-full rounded-lg shadow-md p-5">
-            <TopRankingAllSeason onProfileClick={handleProfileClick} rankingType="All" />
+            <TopRankingAllSeason onProfileClick={handleProfileClick} rankingType="All" ProfileDialog={ProfileDialog} />
           </div>
           <div className="bg-white w-full h-full rounded-lg shadow-md p-5">
-            <StreakRanking onProfileClick={handleProfileClick} rankingType="All" />
+            <StreakRanking onProfileClick={handleProfileClick} rankingType="All" ProfileDialog={ProfileDialog} />
           </div>
         </div>
       </div>
-      <PopUp isOpen={isOpen} onClose={closePopUp}>
-        {selectedData && <ProfileDetailPopUpChildren userId={selectedData} />}
-      </PopUp>
     </>
   );
 }

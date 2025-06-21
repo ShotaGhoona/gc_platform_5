@@ -1,5 +1,4 @@
 import CommonButton from "@/components/common/commonButton";
-import { usePopUp } from "@/hooks/usePopUp";
 import { FaCheck, FaEdit, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { useVisionConfirm } from "../hooks/useVisionConfirm";
@@ -8,18 +7,18 @@ import { useRouter } from "next/navigation";
 
 type Props = {
     text: string;
+    onClose?: () => void;
 }
 
-export default function VisionConfirmPopUpChildren({ text }: Props) {
+export default function VisionConfirmPopUpChildren({ text, onClose }: Props) {
     const { user } = useUser();
-    const { closePopUp } = usePopUp();
     const [visionText, setVisionText] = useState(text);
     const { loading, error, success, handleConfirm } = useVisionConfirm();
     const router = useRouter();
     const onConfirm = async () => {
         await handleConfirm(user?.id ?? "", visionText);
         if (!error) {
-            closePopUp();
+            onClose?.();
             router.push("/dashboard");
         }
     };
@@ -46,7 +45,7 @@ export default function VisionConfirmPopUpChildren({ text }: Props) {
             <div className="w-full flex gap-2 justify-center">
                 <CommonButton
                     label="もう一度考える"
-                    onClick={() => {closePopUp()}}
+                    onClick={() => {onClose?.()}}
                     className="bg-gray-200 text-gray-500"
                     icon={<FaTimes />}
                     disabled={loading}
