@@ -46,9 +46,10 @@ export default function IndexPage() {
                   icon={<FaEdit className="text-white" />}
                   label="目標を追加"
                   className="bg-[#5F7392] text-white"
+                  onClick={() => {}}
                 />
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="min-w-[300px] md:min-w-[1000px]">
                 <EditGoalPopUpChildren
                   onClose={() => {}}
                   addMonth={centerMonth}
@@ -61,9 +62,10 @@ export default function IndexPage() {
                   icon={<FaEdit className="text-white" />}
                   label="フィードバックを記入"
                   className="bg-[#5F7392] text-white"
+                  onClick={() => {}}
                 />
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="min-w-[300px] md:min-w-[1000px]">
                 <EditFbPopUpChildren
                   onClose={() => {}}
                   addMonth={centerMonth}
@@ -77,7 +79,7 @@ export default function IndexPage() {
             <div className="bg-white absolute top-1/2 -translate-y-1/2 left-0 w-[600px] h-[90%] rounded-2xl shadow-lg px-6 py-8 opacity-50 pointer-events-none z-1" >
                 <GoalColumn ym={months[0]} goals={groupedGoals[months[0]] || []} />
             </div>
-            <div className="relative z-2 w-[600px] mx-auto h-full bg-white rounded-2xl shadow-lg px-6 py-8" >
+            <div className="relative z-10 w-[600px] mx-auto h-full bg-white rounded-2xl shadow-lg px-6 py-8" >
               <GoalColumn ym={months[1]} goals={groupedGoals[months[1]] || []} />
             </div>
             <div className="bg-white absolute top-1/2 -translate-y-1/2 right-0 w-[600px] h-[90%] rounded-2xl shadow-lg px-6 py-8 opacity-50 pointer-events-none z-1" >
