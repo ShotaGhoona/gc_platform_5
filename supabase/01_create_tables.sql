@@ -58,9 +58,10 @@ CREATE TABLE profiles (
     vision VARCHAR(120),
     bio VARCHAR(120),
     one_line_profile VARCHAR(120),
-    personal_color VARCHAR(60),
     background TEXT,
     avatar_image_url TEXT,
+    interests_array TEXT[],
+    core_skills_array TEXT[],
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ,
     deleted_at TIMESTAMPTZ
@@ -70,25 +71,7 @@ CREATE INDEX idx_profiles_user_id ON profiles(user_id);
 CREATE INDEX idx_profiles_deleted_at ON profiles(deleted_at);
 
 -- ===================================
--- 6. profile_interest（プロフィール⇔興味中間テーブル）
--- ===================================
-CREATE TABLE profile_interest (
-    profile_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
-    interest_id INTEGER REFERENCES interests(id) ON DELETE CASCADE,
-    PRIMARY KEY (profile_id, interest_id)
-);
-
--- ===================================
--- 7. profile_core_skill（プロフィール⇔コアスキル中間テーブル）
--- ===================================
-CREATE TABLE profile_core_skill (
-    profile_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
-    core_skill_id INTEGER REFERENCES core_skills(id) ON DELETE CASCADE,
-    PRIMARY KEY (profile_id, core_skill_id)
-);
-
--- ===================================
--- 8. profile_sns（プロフィール⇔SNS中間テーブル）
+-- 6. profile_sns（プロフィール⇔SNS中間テーブル）
 -- ===================================
 CREATE TABLE profile_sns (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -99,7 +82,7 @@ CREATE TABLE profile_sns (
 );
 
 -- ===================================
--- 9. profile_rival（プロフィール⇔ライバル中間テーブル）
+-- 7. profile_rival（プロフィール⇔ライバル中間テーブル）
 -- ===================================
 CREATE TABLE profile_rival (
     profile_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
@@ -109,7 +92,7 @@ CREATE TABLE profile_rival (
 );
 
 -- ===================================
--- 10. tiers（ティア）
+-- 8. tiers（ティア）
 -- ===================================
 CREATE TABLE tiers (
     id SERIAL PRIMARY KEY,
@@ -125,7 +108,7 @@ CREATE TABLE tiers (
 );
 
 -- ===================================
--- 11. user_tiers（ユーザーティア）
+-- 9. user_tiers（ユーザーティア）
 -- ===================================
 CREATE TABLE user_tiers (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -139,7 +122,7 @@ CREATE INDEX idx_user_tiers_user_id ON user_tiers(user_id);
 CREATE INDEX idx_user_tiers_role ON user_tiers(role);
 
 -- ===================================
--- 12. morning_event_tags（朝活イベントタグ）
+-- 10. morning_event_tags（朝活イベントタグ）
 -- ===================================
 CREATE TABLE morning_event_tags (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -148,7 +131,7 @@ CREATE TABLE morning_event_tags (
 );
 
 -- ===================================
--- 13. morning_events（朝活イベント）
+-- 11. morning_events（朝活イベント）
 -- ===================================
 CREATE TABLE morning_events (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -167,7 +150,7 @@ CREATE INDEX idx_morning_events_start_at ON morning_events(start_at);
 CREATE INDEX idx_morning_events_deleted_at ON morning_events(deleted_at);
 
 -- ===================================
--- 14. morning_event_on_tags（朝活イベント⇔タグ中間テーブル）
+-- 12. morning_event_on_tags（朝活イベント⇔タグ中間テーブル）
 -- ===================================
 CREATE TABLE morning_event_on_tags (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -176,7 +159,7 @@ CREATE TABLE morning_event_on_tags (
 );
 
 -- ===================================
--- 15. event_participants（イベント参加者中間テーブル）
+-- 13. event_participants（イベント参加者中間テーブル）
 -- ===================================
 CREATE TABLE event_participants (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -190,7 +173,7 @@ CREATE INDEX idx_event_participants_event_id ON event_participants(event_id);
 CREATE INDEX idx_event_participants_user_id ON event_participants(user_id);
 
 -- ===================================
--- 16. external_event_tags（外部イベントタグ）
+-- 14. external_event_tags（外部イベントタグ）
 -- ===================================
 CREATE TABLE external_event_tags (
     id SERIAL PRIMARY KEY,
@@ -199,7 +182,7 @@ CREATE TABLE external_event_tags (
 );
 
 -- ===================================
--- 17. external_events（外部イベント）
+-- 15. external_events（外部イベント）
 -- ===================================
 CREATE TABLE external_events (
     id SERIAL PRIMARY KEY,
@@ -219,7 +202,7 @@ CREATE INDEX idx_external_events_start_at ON external_events(start_at);
 CREATE INDEX idx_external_events_deleted_at ON external_events(deleted_at);
 
 -- ===================================
--- 18. external_event_on_tags（外部イベント⇔タグ中間テーブル）
+-- 16. external_event_on_tags（外部イベント⇔タグ中間テーブル）
 -- ===================================
 CREATE TABLE external_event_on_tags (
     id SERIAL PRIMARY KEY,
@@ -229,7 +212,7 @@ CREATE TABLE external_event_on_tags (
 );
 
 -- ===================================
--- 19. monthly_goals（月間目標）
+-- 17. monthly_goals（月間目標）
 -- ===================================
 CREATE TABLE monthly_goals (
     id SERIAL PRIMARY KEY,
@@ -247,7 +230,7 @@ CREATE INDEX idx_monthly_goals_monthly_start_date ON monthly_goals(monthly_start
 CREATE INDEX idx_monthly_goals_deleted_at ON monthly_goals(deleted_at);
 
 -- ===================================
--- 20. attendances（出席記録）
+-- 18. attendances（出席記録）
 -- ===================================
 CREATE TABLE attendances (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -261,7 +244,7 @@ CREATE INDEX idx_attendances_discord_id ON attendances(discord_id);
 CREATE INDEX idx_attendances_joined_at ON attendances(joined_at);
 
 -- ===================================
--- 21. attendance_flags（出席フラグ）
+-- 19. attendance_flags（出席フラグ）
 -- ===================================
 CREATE TABLE attendance_flags (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -277,7 +260,7 @@ CREATE INDEX idx_attendance_flags_user_id ON attendance_flags(user_id);
 CREATE INDEX idx_attendance_flags_date ON attendance_flags(date);
 
 -- ===================================
--- 22. system_notice_tags（システム通知タグ）
+-- 20. system_notice_tags（システム通知タグ）
 -- ===================================
 CREATE TABLE system_notice_tags (
     id SERIAL PRIMARY KEY,
@@ -289,7 +272,7 @@ CREATE TABLE system_notice_tags (
 );
 
 -- ===================================
--- 23. system_notices（システム通知）
+-- 21. system_notices（システム通知）
 -- ===================================
 CREATE TABLE system_notices (
     id SERIAL PRIMARY KEY,
@@ -308,7 +291,7 @@ CREATE INDEX idx_system_notices_publish_end_at ON system_notices(publish_end_at)
 CREATE INDEX idx_system_notices_deleted_at ON system_notices(deleted_at);
 
 -- ===================================
--- 24. system_notice_on_tags（システム通知⇔タグ中間テーブル）
+-- 22. system_notice_on_tags（システム通知⇔タグ中間テーブル）
 -- ===================================
 CREATE TABLE system_notice_on_tags (
     id SERIAL PRIMARY KEY,

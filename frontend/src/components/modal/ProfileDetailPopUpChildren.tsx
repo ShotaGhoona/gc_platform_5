@@ -110,26 +110,22 @@ export const ProfileDetailPopUpChildren = ({ userId }: Props) => {
           <div className="flex w-1/2 h-full flex-col p-5 bg-gray-50 rounded-lg gap-2 shadow-md">
             <h3 className="text-lg font-bold text-[#5D6B80]">Interests</h3>
             <div className="flex flex-wrap gap-2">
-              {profile.interests.map((interest) => (
+              {profile.interests.map((interest, index) => (
                 <p 
-                key={interest.id} 
-                className="text-sm text-gray-500"
-                style={{ backgroundColor: interest.color }}
-                >#{interest.name}</p>
+                key={index} 
+                className="text-sm text-gray-500 bg-blue-100 px-2 py-1 rounded"
+                >#{interest}</p>
               ))}
             </div>
           </div>
           <div className="flex w-1/2 h-full flex-col p-5 bg-gray-50 rounded-lg gap-2 shadow-md">
             <h3 className="text-lg font-bold text-[#5D6B80]">Core Skills</h3>
             <div className="flex flex-wrap gap-2">
-              {profile.coreSkills.map((skill) => (
-                <div className="flex items-center gap-2">
-                  <p 
-                  key={skill.id} 
-                  className="text-sm text-gray-500"
-                  style={{ backgroundColor: skill.color }}
-                  >{skill.name}</p>
-                </div>
+              {profile.coreSkills.map((skill, index) => (
+                <p 
+                key={index} 
+                className="text-sm text-gray-500 bg-green-100 px-2 py-1 rounded"
+                >{skill}</p>
               ))}
             </div>
           </div>

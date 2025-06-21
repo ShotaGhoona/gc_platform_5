@@ -61,8 +61,8 @@ class ProfileUpdateSchema(BaseModel):
     one_line_profile: Optional[str] = None
     background: Optional[str] = None
     avatar_image_url: Optional[str] = None
-    interests: Optional[List[int]] = None
-    core_skills: Optional[List[int]] = None
+    interests: Optional[List[str]] = None
+    core_skills: Optional[List[str]] = None
     sns: Optional[List[SnsUpdateSchema]] = None
 
 class MemberDetailSchema(BaseModel):
@@ -73,8 +73,8 @@ class MemberDetailSchema(BaseModel):
     background: Optional[str] = None
     avatar_image_url: Optional[str] = None
     created_at: Optional[str] = None
-    interests: List[InterestSchema] = []
-    core_skills: List[CoreSkillSchema] = []
+    interests: List[str] = []
+    core_skills: List[str] = []
     sns: List[SnsForMemberSchema] = []
     tiers: List[TierSchema] = []
     isRival: bool = False
@@ -94,8 +94,8 @@ class ProfileUpdate(BaseModel):
     one_line_profile: str = Field("", max_length=30)
     background: str = Field("", max_length=140)
     avatar_image_url: str = Field("", max_length=512)
-    interests: Optional[list[int]] = None
-    core_skills: Optional[list[int]] = None
+    interests: Optional[list[str]] = None
+    core_skills: Optional[list[str]] = None
     sns: Optional[list[SnsUpdateSchema]] = None
 
     @validator("username")

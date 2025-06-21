@@ -33,9 +33,9 @@ def get_member_detail_service(db: Session, user_id: str, viewer_id: str = None):
     profile, tiers = res
 
     # usernameはProfileテーブルのカラムを直接利用
-    # interests/core_skills
-    interests = [InterestSchema.from_orm(i) for i in profile.interests]
-    core_skills = [CoreSkillSchema.from_orm(s) for s in profile.core_skills]
+    # interests/core_skills（配列から直接取得）
+    interests = profile.interests_array or []
+    core_skills = profile.core_skills_array or []
 
     tier_schemas = [TierSchema.from_orm(t) for t in tiers] if tiers else []
 
@@ -91,7 +91,7 @@ def get_member_detail_service(db: Session, user_id: str, viewer_id: str = None):
 
 # 新規作成
 def create_profile_service(db: Session, user_id: str, data):
-    from app.database.models.profile import Profile, Interest, CoreSkill, SNS, profile_sns_table
+    from app.database.models.profile import Profile, SNS, profile_sns_table
 
     # 既に存在する場合はエラー
     if db.query(Profile).filter(Profile.user_id == user_id).first():
@@ -104,20 +104,12 @@ def create_profile_service(db: Session, user_id: str, data):
         one_line_profile=data.one_line_profile,
         background=data.background,
         avatar_image_url=data.avatar_image_url,
+        interests_array=data.interests,
+        core_skills_array=data.core_skills,
     )
     db.add(profile)
     db.commit()
     db.refresh(profile)
-
-    # interests
-    if data.interests is not None:
-        interests = db.query(Interest).filter(Interest.id.in_(data.interests)).all()
-        profile.interests = interests
-
-    # core_skills
-    if data.core_skills is not None:
-        core_skills = db.query(CoreSkill).filter(CoreSkill.id.in_(data.core_skills)).all()
-        profile.core_skills = core_skills
 
     # SNS
     if data.sns is not None:
@@ -135,7 +127,7 @@ def create_profile_service(db: Session, user_id: str, data):
     return True
 # 修正
 def update_profile_service(db: Session, user_id: str, data: ProfileUpdateSchema):
-    from app.database.models.profile import Profile, Interest, CoreSkill, SNS, profile_sns_table
+    from app.database.models.profile import Profile, SNS, profile_sns_table
 
     profile = db.query(Profile).filter(Profile.user_id == user_id).first()
     if not profile:
@@ -147,16 +139,8 @@ def update_profile_service(db: Session, user_id: str, data: ProfileUpdateSchema)
     profile.one_line_profile = data.one_line_profile
     profile.background = data.background
     profile.avatar_image_url = data.avatar_image_url
-
-    # interests
-    if data.interests is not None:
-        interests = db.query(Interest).filter(Interest.id.in_(data.interests)).all()
-        profile.interests = interests
-
-    # core_skills
-    if data.core_skills is not None:
-        core_skills = db.query(CoreSkill).filter(CoreSkill.id.in_(data.core_skills)).all()
-        profile.core_skills = core_skills
+    profile.interests_array = data.interests
+    profile.core_skills_array = data.core_skills
 
     # SNS
     if data.sns is not None:

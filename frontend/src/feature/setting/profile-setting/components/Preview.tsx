@@ -19,7 +19,7 @@ export const ProfilePreview = ({ formData }: Props) => {
         <DialogTrigger asChild>
           <div className="w-[300px] top-0 left-0 relative group cursor-pointer">
             <ProfileCard
-              href={formData?.avatarImageUrl || ''}
+              href={formData?.avatarImageUrl || "/images/profile/sampleProfileIcon.png"}
               alt={formData?.username || ''}
               username={formData?.username || ''}
               bio={formData?.bio || ''}
@@ -39,7 +39,7 @@ export const ProfilePreview = ({ formData }: Props) => {
       <div className="w-[400px]">
         <RankerContainer
           name={formData?.username || ''}
-          profileIconUrl={formData?.avatarImageUrl || ''}
+          profileIconUrl={formData?.avatarImageUrl || "/images/profile/sampleProfileIcon.png"}
           bio={formData?.bio || ''}
           score={'20'}
           onProfileClick={() => {}}
@@ -47,7 +47,7 @@ export const ProfilePreview = ({ formData }: Props) => {
         />
         <RankerContainer
           name={formData?.username || ''}
-          profileIconUrl={formData?.avatarImageUrl || ''}
+          profileIconUrl={formData?.avatarImageUrl || "/images/profile/sampleProfileIcon.png"}
           bio={formData?.bio || ''}
           score={'16'}
           onProfileClick={() => {}}

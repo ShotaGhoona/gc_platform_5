@@ -13,7 +13,11 @@ export const ProfileCard = ({
         <p className="text-white text-sm font-bold">{username}</p>
       </div>
       <div>
-        <img src={href} alt={alt} className="w-full h-auto aspect-square object-cover"/>
+        <img 
+          src={href || "/images/profile/sampleProfileIcon.png"} 
+          alt={alt} 
+          className="w-full h-auto aspect-square object-cover"
+        />
       </div>
       <div className="h-[50px] flex items-center justify-center rounded-b-[20px] bg-primary"
       >

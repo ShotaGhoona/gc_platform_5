@@ -9,8 +9,8 @@ export type ProfileUpdateRequest = {
   one_line_profile?: string;
   background?: string;
   avatar_image_url?: string;
-  interests?: number[];
-  core_skills?: number[];
+  interests?: string[];
+  core_skills?: string[];
   sns?: SnsUpdateRequest[];
 };
 export type ProfileResponse = {
@@ -20,8 +20,8 @@ export type ProfileResponse = {
   bio: string;
   oneLine: string;
   background: string;
-  interests: any[];
-  coreSkills: any[];
+  interests: string[];
+  coreSkills: string[];
   websiteUrl: string;
   xUrl: string;
   instagramUrl: string;

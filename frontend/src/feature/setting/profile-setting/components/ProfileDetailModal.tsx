@@ -1,5 +1,6 @@
 import { ProfileResponse } from "../types/profile";
 import { useInterestCoreskillTags } from "../hooks/useInterestCoreskillTags";
+import { DialogTitle } from "@/components/ui/dialog";
 
 type Props = {
   formData: ProfileResponse | any;
@@ -24,6 +25,7 @@ export const ProfileDetailModal = ({ formData }: Props) => {
 
   return (
     <div className="px-8 flex flex-col gap-8 justify-between h-full">
+      <DialogTitle className="sr-only">プロフィール詳細</DialogTitle>
       <div className="flex flex-col h-full gap-5">
         <div className="flex justify-between">
           <p className="text-sm text-gray-500">参加日：</p>

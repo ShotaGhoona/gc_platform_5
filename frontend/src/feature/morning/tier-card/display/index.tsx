@@ -43,10 +43,8 @@ export default function IndexPage() {
   const userId = user?.id;
   const { tierList, loading, error } = useTierListWithFlag(userId || "");
 
-  if (!userId) {
-    return <div className="w-full h-full flex items-center justify-center">userId未指定</div>;
-  }
-  if (loading) {
+  // サーバーサイドとクライアントサイドでHydrationエラーを避けるため
+  if (!userId || loading) {
     return <div className="w-full h-full flex items-center justify-center">Loading...</div>;
   }
   if (error) {

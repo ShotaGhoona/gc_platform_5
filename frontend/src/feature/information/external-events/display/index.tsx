@@ -46,6 +46,7 @@ export default function IndexPage() {
                   icon={<FaFilter className="text-gray-500" />}
                   label="フィルター"
                   className="bg-white text-gray-500"
+                  onClick={() => {}}
                 />
               </DialogTrigger>
               <DialogContent>
@@ -60,9 +61,10 @@ export default function IndexPage() {
                   icon={<FaPlus className="text-white" />}
                   label="新規作成"
                   className="bg-[#5D6B80] text-white"
+                  onClick={() => {}}
                 />
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="w-[1000px]">
                 <AddExternalEventPopUpChildren
                   onClose={() => {}}
                 />

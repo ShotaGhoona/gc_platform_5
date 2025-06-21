@@ -37,8 +37,6 @@ export const BasicProfileForm = ({
   form,
   onChange,
 }: Props) => {
-  // 入力値のローカル状態
-  const [localForm, setLocalForm] = useState<Partial<ProfileUpdateRequest>>(form);
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -56,14 +54,8 @@ export const BasicProfileForm = ({
     validateAll,
   } = useProfileFormValidation();
 
-
-  useEffect(() => {
-    setLocalForm(form);
-  }, [form]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setLocalForm((prev) => ({ ...prev, [name]: value }));
     onChange({ [name]: value });
     validateField(name, value);
   };
@@ -113,7 +105,7 @@ export const BasicProfileForm = ({
               type="text"
               id="username"
               name="username"
-              value={localForm.username || ""}
+              value={form.username || ""}
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md text-sm text-gray-600 bg-[#f9f9f9] px-4 py-2 shadow-sm"
               placeholder="ユーザーネームを入力"
@@ -134,7 +126,7 @@ export const BasicProfileForm = ({
               type="text"
               id="bio"
               name="bio"
-              value={localForm.bio || ""}
+              value={form.bio || ""}
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md text-sm text-gray-600 bg-[#f9f9f9] px-4 py-2 shadow-sm"
               placeholder="あなたを表す一言を入力（15文字以内）"
@@ -149,7 +141,6 @@ export const BasicProfileForm = ({
                     type="button"
                     className="text-left px-3 py-2 text-xs text-gray-700 hover:bg-[#D68897] hover:text-white transition"
                     onMouseDown={() => {
-                      setLocalForm((prev) => ({ ...prev, bio: preset }));
                       onChange({ bio: preset });
                     }}
                   >
@@ -175,7 +166,7 @@ export const BasicProfileForm = ({
               id="one_line_profile"
               name="one_line_profile"
               maxLength={30}
-              value={localForm.one_line_profile || ""}
+              value={form.one_line_profile || ""}
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md text-sm text-gray-600 bg-[#f9f9f9] px-4 py-2 shadow-sm"
               placeholder="自分を一言で表現してください（30文字以内）"
@@ -190,7 +181,6 @@ export const BasicProfileForm = ({
                     type="button"
                     className="text-left px-3 py-2 text-xs text-gray-700 hover:bg-[#D68897] hover:text-white transition"
                     onMouseDown={() => {
-                      setLocalForm((prev) => ({ ...prev, one_line_profile: preset }));
                       onChange({ one_line_profile: preset });
                     }}
                   >
@@ -254,7 +244,7 @@ export const BasicProfileForm = ({
           id="background"
           name="background"
           maxLength={140}
-          value={localForm.background || ""}
+          value={form.background || ""}
           onChange={handleInputChange}
           rows={5}
           className="mt-1 block w-full rounded-md text-sm text-gray-600 bg-[#f9f9f9] px-4 py-2 shadow-sm"
