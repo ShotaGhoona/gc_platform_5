@@ -2,9 +2,11 @@ openai
 fastapi==0.109.2
 uvicorn==0.27.1
 sqlalchemy==2.0.27
+psycopg2-binary
 supabase==2.3.4
 python-dotenv==1.0.1
-pydantic==1.10.13
+pydantic>=2.8.0
+email-validator
 python-jose==3.3.0
 passlib==1.7.4
 python-multipart==0.0.9

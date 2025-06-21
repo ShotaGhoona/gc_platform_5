@@ -22,7 +22,7 @@ const ProfileDialog = ({ userId, children }: { userId: string; children: React.R
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl">
+      <DialogContent className="min-w-[300px] md:min-w-[1000px]">
         <ProfileDetailPopUpChildren userId={userId} />
       </DialogContent>
     </Dialog>
@@ -109,7 +109,7 @@ export default function IndexPage() {
         </div>
       </div>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetContent side="right" className="w-[600px]">
+        <SheetContent side="right" className="min-w-[600px] p-5">
           {eventId && detail && (
             <MorningEventSidePeakChildren
               event={detail}
@@ -123,7 +123,7 @@ export default function IndexPage() {
         </SheetContent>
       </Sheet>
       <Dialog open={!!showAddMorningEventModal} onOpenChange={setShowAddMorningEventModal}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="min-w-[300px] md:min-w-[1000px]">
           {showAddMorningEventModal && (
             <AddMorningEventModal
               onClose={() => setShowAddMorningEventModal(false)}
@@ -132,7 +132,7 @@ export default function IndexPage() {
         </DialogContent>
       </Dialog>
       <Dialog open={!!showEditMorningEventModal} onOpenChange={setShowEditMorningEventModal}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="min-w-[300px] md:min-w-[1000px]">
           {showEditMorningEventModal && editTargetEvent && (
             <EditMorningEventModal
               onClose={() => {

@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { Calendar, MessageCircle, Trophy, Target, Users } from "lucide-react";
-import { DiscordMockScreen } from "./mockScreens/DiscordMockScreen";
-import { DashboardMockScreen } from "./mockScreens/DashboardMockScreen";
-import { TierMockScreen } from "./mockScreens/TierMockScreen";
-import { GoalMockScreen } from "./mockScreens/GoalMockScreen";
-// import { RivalMockScreen } from "./mockScreens/RivalMockScreen";
+import { DiscordMockScreen } from "../mockScreens/DiscordMockScreen";
+import { DashboardMockScreen } from "../mockScreens/DashboardMockScreen";
+import { TierMockScreen } from "../mockScreens/TierMockScreen";
+import { GoalMockScreen } from "../mockScreens/GoalMockScreen";
+// import { RivalMockScreen } from "../mockScreens/RivalMockScreen";
 
 interface Feature {
   id: string;

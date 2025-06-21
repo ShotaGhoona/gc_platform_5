@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Users, Calendar, Target, MessageCircle, Trophy, Sunrise, TrendingUp } from "lucide-react";
-import FeatureShowcase from "@/components/landing/FeatureShowcase";
+import { ArrowRight, Users, Sunrise, TrendingUp } from "lucide-react";
+import FeatureShowcase from "@/feature/lp/display/FeatureShowcase";
 export const dynamic = 'force-dynamic';
 
 // Fetch user count from API

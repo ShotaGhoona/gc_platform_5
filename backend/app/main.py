@@ -32,19 +32,24 @@ app = FastAPI(title="GC Platform API")
 
 # CORS設定
 import os
-allowed_origins = [
+
+# Vercel 本番 & プレビュー URL を許可
+origins = [
     "http://localhost:3000",  # 開発環境
-    os.getenv("FRONTEND_URL", ""),  # プロダクション環境のフロントエンドURL
+    "https://gc-platform-5-git-main-shota-yamashitas-projects-c5da0fce.vercel.app",
+    "https://gc-platform-5.vercel.app",
 ]
-# 空文字列を除去
-allowed_origins = [origin for origin in allowed_origins if origin]
+
+# 環境変数からも追加可能
+if os.getenv("FRONTEND_URL"):
+    origins.append(os.getenv("FRONTEND_URL"))
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],    
+    allow_headers=["*"],
 )
 
 # APIルーターの登録

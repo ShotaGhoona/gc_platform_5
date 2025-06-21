@@ -25,6 +25,8 @@ def get_tier_detail_with_flag(db: Session, user_id: str, tier_id: int):
         return None
     user_tier_ids = set(get_user_tier_ids(db, user_id))
     role = None
+    user_tier = None
+    
     if tier.id in user_tier_ids:
         user_tier = db.query(UserTier).filter(
             UserTier.user_id == user_id,
@@ -32,6 +34,7 @@ def get_tier_detail_with_flag(db: Session, user_id: str, tier_id: int):
         ).first()
         if user_tier:
             role = user_tier.role
+            
     return TierDetail(
         id=tier.id,
         title_en=tier.title_en,
@@ -41,7 +44,8 @@ def get_tier_detail_with_flag(db: Session, user_id: str, tier_id: int):
         long_description=tier.long_description,
         story=tier.story,
         has_tier=(tier.id in user_tier_ids),
-        role=role
+        role=role,
+        user_tier_id=str(user_tier.id) if user_tier else None
     )
 
 def get_main_sub_tiers(db: Session, user_id: str):

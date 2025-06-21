@@ -1,14 +1,14 @@
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from datetime import datetime
+import re
 
 class InterestSchema(BaseModel):
     id: int
     name: str
     color: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class CoreSkillSchema(BaseModel):
     id: int
@@ -16,15 +16,13 @@ class CoreSkillSchema(BaseModel):
     color: Optional[str] = None
     icon: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class TierSchema(BaseModel):
     id: int
     badge_color: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class MemberListSchema(BaseModel):
     user_id: str
@@ -32,8 +30,7 @@ class MemberListSchema(BaseModel):
     avatar_image_url: Optional[str] = None
     bio: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class SnsSchema(BaseModel):
     id: int
@@ -41,8 +38,7 @@ class SnsSchema(BaseModel):
     image_url: Optional[str] = None
     link: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class SnsForMemberSchema(BaseModel):
     id: int
@@ -79,14 +75,11 @@ class MemberDetailSchema(BaseModel):
     tiers: List[TierSchema] = []
     isRival: bool = False
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class VisionSchema(BaseModel):
     vision: Optional[str] = None
 
-from pydantic import BaseModel, Field, validator
-import re
 
 class ProfileUpdate(BaseModel):
     username: str = Field(..., min_length=3, max_length=20)
@@ -98,25 +91,29 @@ class ProfileUpdate(BaseModel):
     core_skills: Optional[list[str]] = None
     sns: Optional[list[SnsUpdateSchema]] = None
 
-    @validator("username")
+    @field_validator("username")
+    @classmethod
     def username_valid(cls, v):
         if not re.fullmatch(r"[a-z0-9_.]{3,20}", v):
             raise ValueError("ユーザーネームは3〜20文字の英小文字・数字・_・.のみ利用できます")
         return v
 
-    @validator("bio")
+    @field_validator("bio")
+    @classmethod
     def bio_valid(cls, v):
         if len(v) > 15:
             raise ValueError("公開フレーズは15文字以内で入力してください")
         return v
 
-    @validator("one_line_profile")
+    @field_validator("one_line_profile")
+    @classmethod
     def one_line_profile_valid(cls, v):
         if len(v) > 30:
             raise ValueError("OneLinerProfileは30文字以内で入力してください")
         return v
 
-    @validator("background")
+    @field_validator("background")
+    @classmethod
     def background_valid(cls, v):
         if len(v) > 140:
             raise ValueError("backgroundは140文字以内で入力してください")
