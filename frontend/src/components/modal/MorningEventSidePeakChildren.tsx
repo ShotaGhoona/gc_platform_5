@@ -8,9 +8,10 @@ type Props = {
   event: MorningEventDetailType;
   onProfileClick?: (userId: string) => void;
   onEditClick?: () => void;
+  ProfileDialog: React.ComponentType<{ userId: string; children: React.ReactNode }>;
 };
 
-export default function MorningEventSidePeakChildren({ event, onProfileClick, onEditClick }: Props) {
+export default function MorningEventSidePeakChildren({ event, onProfileClick, onEditClick, ProfileDialog }: Props) {
   const { user } = useUser();
   const [eventDetail, setEventDetail] = useState<MorningEventDetailType>(event);
   const [loading, setLoading] = useState(false);
@@ -99,7 +100,9 @@ export default function MorningEventSidePeakChildren({ event, onProfileClick, on
                 }}
               >
                 <p className="text-sm text-gray-700 font-bold">{eventDetail.host_user_name}</p>
-                <img src={eventDetail.host_avatar_image_url} alt="" className="w-8 h-8 rounded-full" />
+                <ProfileDialog userId={eventDetail.host_user_id || ""}>
+                  <img src={eventDetail.host_avatar_image_url} alt="" className="w-8 h-8 rounded-full" />
+                </ProfileDialog>
               </div>
             </div>
             <h2 className="text-xl font-bold text-center my-5 text-transparent bg-clip-text bg-gradient-to-r from-[#5F7392] to-[#BF6375]">{eventDetail.title}</h2>
@@ -121,11 +124,13 @@ export default function MorningEventSidePeakChildren({ event, onProfileClick, on
                     if (onProfileClick) onProfileClick(p.user_id);
                   }}
                 >
-                  <img
-                    src={p.avatar_image_url}
-                    alt=""
-                    className="w-8 h-8 rounded-full"
-                  />
+                  <ProfileDialog userId={p.user_id}>
+                    <img
+                      src={p.avatar_image_url}
+                      alt=""
+                      className="w-8 h-8 rounded-full"
+                      />
+                  </ProfileDialog>
                   {/* <span className="text-xs text-gray-700">{p.user_name}</span> */}
                 </div>
               ))}

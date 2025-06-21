@@ -9,7 +9,7 @@ export type SystemNotice = {
   id: number;
   title: string;
   description: string;
-  tags: SystemNoticeTag[];
+  tags: string[];  // 文字列配列に変更
 };
 
 export type SystemNoticeDetail = {
@@ -17,13 +17,21 @@ export type SystemNoticeDetail = {
   title: string;
   description: string;
   image_url: string;
-  tags: SystemNoticeTag[];
+  tags: string[];  // 文字列配列に変更
   publish_start_at: string;
   publish_end_at: string;
 };
 
-export async function fetchSystemNoticeList(): Promise<SystemNotice[]> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/system_notices`);
+export type SystemNoticeListResponse = {
+  notices: SystemNotice[];
+  total: number;
+  page: number;
+  limit: number;
+  total_pages: number;
+};
+
+export async function fetchSystemNoticeList(page: number = 1, limit: number = 10): Promise<SystemNoticeListResponse> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/system_notices?page=${page}&limit=${limit}`);
   if (!res.ok) throw new Error('お知らせの取得に失敗しました');
   return await res.json();
 }

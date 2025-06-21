@@ -5,20 +5,16 @@ import Header from "@/components/display/header";
 export default function Home() {
   return (
     <div className="flex bg-background">
-        {/* <img
-          src="/images/sign-in-bg.jpg"
-          alt="home"
-          className="absolute top-0 left-0 w-full h-full object-cover"
-        /> */}
-        {/* <div className="absolute top-0 left-0 w-full h-full bg-black/70"></div> */}
         <div className="transition-all duration-300">
-        <Sidebar />
+          <Sidebar />
         </div>
         <div className="flex-1 flex flex-col max-h-screen relative">
-        <Header />
-        <main className="flex-1 min-h-[calc(100vh-45px)] p-5 z-1">
-            <IndexPage />
-        </main>
+          <Header />
+          <main className="flex-1 h-[calc(100vh-45px)] p-5 z-1">
+            <div className="h-full">
+              <IndexPage />
+            </div>
+          </main>
         </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { Suspense } from "react";
 
 export default function DiscordCallbackPage() {
   return (
-    <div className="flex bg-[#EEEEEE] ">
+    <div className="flex bg-background">
         <div className="transition-all duration-300">
         <Sidebar />
         </div>

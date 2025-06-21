@@ -13,7 +13,14 @@ export function useTierDetailWithFlag(tierId: number | null, userId: string) {
     setLoading(true);
     fetchTierDetailWithFlag(tierId, userId)
       .then((detail) => setTierDetail(detail))
-      .catch((e) => setError(e.message))
+      .catch((e) => {
+        console.error('useTierDetailWithFlag error:', e);
+        if (e.name === 'TypeError' && e.message.includes('fetch')) {
+          setError('ネットワークエラー: サーバーに接続できません');
+        } else {
+          setError(e.message || 'データの取得に失敗しました');
+        }
+      })
       .finally(() => setLoading(false));
   }, [tierId, userId]);
 
@@ -22,7 +29,14 @@ export function useTierDetailWithFlag(tierId: number | null, userId: string) {
     setLoading(true);
     fetchTierDetailWithFlag(tierId, userId)
       .then((detail) => setTierDetail(detail))
-      .catch((e) => setError(e.message))
+      .catch((e) => {
+        console.error('useTierDetailWithFlag error:', e);
+        if (e.name === 'TypeError' && e.message.includes('fetch')) {
+          setError('ネットワークエラー: サーバーに接続できません');
+        } else {
+          setError(e.message || 'データの取得に失敗しました');
+        }
+      })
       .finally(() => setLoading(false));
   }};
 }

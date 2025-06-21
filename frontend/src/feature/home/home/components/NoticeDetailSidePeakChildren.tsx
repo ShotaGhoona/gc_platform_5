@@ -17,16 +17,12 @@ export const NoticeDetailSidePeakChildren = ({ notice }: NoticeDetailProps) => {
       )}
       {/* タグ */}
       <div className="flex items-center gap-2">
-        {notice.tags.map((tag) => (
+        {notice.tags.map((tag, index) => (
           <span
-            key={tag.id}
-            className="text-xs px-2 py-1 rounded"
-            style={{
-              backgroundColor: `${tag.color}20`,
-              color: tag.color,
-            }}
+            key={index}
+            className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-800"
           >
-            {tag.name}
+            {tag}
           </span>
         ))}
       </div>

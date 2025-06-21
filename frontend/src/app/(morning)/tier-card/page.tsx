@@ -4,7 +4,7 @@ import Header from "@/components/display/header";
 
 export default function TierCard() {
   return (
-    <div className="flex bg-[#EEEEEE] ">
+    <div className="flex bg-background">
         <div className="transition-all duration-300 z-10">
           <Sidebar />
         </div>
