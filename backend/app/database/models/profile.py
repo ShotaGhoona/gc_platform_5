@@ -49,7 +49,6 @@ class Profile(Base):
     vision = Column(String(120))
     bio = Column(String(120))
     one_line_profile = Column(String(120))
-    personal_color = Column(String(60))
     background = Column(Text)
     avatar_image_url = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

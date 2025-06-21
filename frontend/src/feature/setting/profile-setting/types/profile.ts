@@ -9,7 +9,6 @@ export type ProfileUpdateRequest = {
   one_line_profile?: string;
   background?: string;
   avatar_image_url?: string;
-  personal_color?: string;
   interests?: number[];
   core_skills?: number[];
   sns?: SnsUpdateRequest[];
@@ -21,7 +20,6 @@ export type ProfileResponse = {
   bio: string;
   oneLine: string;
   background: string;
-  personalColor: string;
   interests: any[];
   coreSkills: any[];
   websiteUrl: string;

@@ -21,7 +21,6 @@ def get_member_list_service(db: Session):
             username=row.username,
             avatar_image_url=row.avatar_image_url,
             bio=row.bio,
-            personal_color=row.personal_color,
         )
         for row in members
     ]

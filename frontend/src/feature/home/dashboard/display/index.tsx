@@ -9,24 +9,33 @@ import { useUser } from "@clerk/nextjs";
 import WeeklyAnalysis from "./WeeklyAnalysis";
 import TodayLive from "./TodayLive";
 import WeeklyFlow from "./WeeklyFlow";
-import { PopUp } from "@/components/display/PopUp";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { ProfileDetailPopUpChildren } from "@/components/modal/ProfileDetailPopUpChildren";
 import TopRankingThisMonth from "@/feature/morning/ranking/display/TopRankingThisMonth";
 import MonthlyGoal from "./MonthlyGoal";
 import MainSubTierCard from "./MainSubTierCard";
-import { usePopUp } from "@/hooks/usePopUp";
 import MainContentsDateRangeSelect from "../components/MainContentsDateRangeSelect";
+
+const ProfileDialog = ({ userId, children }: { userId: string; children: React.ReactNode }) => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent className="min-w-[300px] md:min-w-[1000px]">
+        <ProfileDetailPopUpChildren userId={userId} />
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default function DashboardPage() {
   const [selectedViewIndex, setSelectedViewIndex] = useState(0);
   const [selectedDateIndex, setSelectedDateIndex] = useState(0);
   const { user } = useUser();
-  const { isOpen, openPopUp, closePopUp } = usePopUp();
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const handleProfileClick = (userId: string) => {
-    setSelectedUserId(userId);
-    openPopUp();
+    // This will be handled by the Dialog component
   };
 
   const { data, loading, error } = useDashboardSummary(user?.id ?? "");
@@ -48,7 +57,7 @@ export default function DashboardPage() {
           <div className="flex-1 h-full bg-white rounded-lg shadow-md p-5 min-h-0">
             {selectedViewIndex === 0 && (<WeeklyAnalysis selectedViewIndex={selectedDateIndex} />)}
             {selectedViewIndex === 1 && <WeeklyFlow selectedViewIndex={selectedDateIndex} />}
-            {selectedViewIndex === 2 && <TodayLive onProfileClick={handleProfileClick} />}
+            {selectedViewIndex === 2 && <TodayLive onProfileClick={handleProfileClick} ProfileDialog={ProfileDialog} />}
             {selectedViewIndex === 3 && <MonthlyGoal />}
           </div>
         </div>
@@ -57,14 +66,11 @@ export default function DashboardPage() {
             <MainSubTierCard />
           </div>
           <div className="flex-1 bg-white rounded-lg shadow-md p-5">
-            <TopRankingThisMonth year={new Date().getFullYear()} month={new Date().getMonth() + 1} onProfileClick={handleProfileClick} />
+            <TopRankingThisMonth year={new Date().getFullYear()} month={new Date().getMonth() + 1} onProfileClick={handleProfileClick} ProfileDialog={ProfileDialog} />
           </div>
         </div>
         {/* <TierLoginTest /> */}
       </div>
-      <PopUp isOpen={isOpen} onClose={closePopUp}>
-        <ProfileDetailPopUpChildren userId={selectedUserId ?? ""} />
-      </PopUp>
     </>
   );
 }

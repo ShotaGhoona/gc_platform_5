@@ -3,26 +3,33 @@
 import EventList from "@/feature/information/external-events/display/EventList";
 import { ExternalEventFilterProvider } from "@/feature/information/external-events/context/ExternalEventFilterContext";
 import SelectedTagChips from "@/feature/information/external-events/components/SelectedTagChips";
-import { PopUp } from "@/components/display/PopUp";
 import { useState } from "react";
 import { AddExternalEventPopUpChildren } from "@/feature/information/external-events/components/AddExternalEventPopUpChildren";
 import { FilterPopUpChildren } from "@/feature/information/external-events/components/FilterPopUpChildren";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { FaFilter, FaPlus } from "react-icons/fa";
 import  CommonButton  from "@/components/common/commonButton";
 import { ExternalEventDetailSidePeakChildren } from "@/feature/information/external-events/components/ExternalEventDetailSidePeakChildren";
-import { SidePeak } from "@/components/display/SidePeak";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { EditExternalEventPopUpChildren } from "@/feature/information/external-events/components/EditExternalEventPopUpChildren";
 import { ProfileDetailPopUpChildren } from "@/components/modal/ProfileDetailPopUpChildren";
-import { usePopUp } from "@/hooks/usePopUp";
-import { useSidePeak } from "@/hooks/useSidePeak";
 
 export default function IndexPage() {
-  const { isOpen: isProfileOpen, openPopUp: openProfilePopUp, closePopUp: closeProfilePopUp } = usePopUp();
-  const { isOpen: isAddEventOpen, openPopUp: openAddEventPopUp, closePopUp: closeAddEventPopUp } = usePopUp();
-  const { isOpen: isFilterOpen, openPopUp: openFilterPopUp, closePopUp: closeFilterPopUp } = usePopUp();
-  const { isOpen: isEditEventOpen, openPopUp: openEditEventPopUp, closePopUp: closeEditEventPopUp } = usePopUp();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isEditEventOpen, setIsEditEventOpen] = useState(false);
 
-  const { isOpen: isRefetchOpen, selectedData: selectedEvent, openSidePeak, closeSidePeak } = useSidePeak();
+  const [isRefetchOpen, setIsRefetchOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  
+  const openSidePeak = (event: any) => {
+    setSelectedEvent(event);
+    setIsRefetchOpen(true);
+  };
+  
+  const closeSidePeak = () => {
+    setIsRefetchOpen(false);
+    setSelectedEvent(null);
+  };
   // 編集・消去後のリフレッシュ処理などはここで管理
 
   return (
@@ -33,18 +40,34 @@ export default function IndexPage() {
             <SelectedTagChips />
           </div>
           <div className="flex gap-2">
-            <CommonButton
-              onClick={openFilterPopUp}
-              icon={<FaFilter className="text-gray-500" />}
-              label="フィルター"
-              className="bg-white text-gray-500"
-            />
-            <CommonButton
-              onClick={openAddEventPopUp}
-              icon={<FaPlus className="text-white" />}
-              label="新規作成"
-              className="bg-[#5D6B80] text-white"
-            />
+            <Dialog>
+              <DialogTrigger asChild>
+                <CommonButton
+                  icon={<FaFilter className="text-gray-500" />}
+                  label="フィルター"
+                  className="bg-white text-gray-500"
+                />
+              </DialogTrigger>
+              <DialogContent>
+                <FilterPopUpChildren
+                  onClose={() => {}}
+                />
+              </DialogContent>
+            </Dialog>
+            <Dialog>
+              <DialogTrigger asChild>
+                <CommonButton
+                  icon={<FaPlus className="text-white" />}
+                  label="新規作成"
+                  className="bg-[#5D6B80] text-white"
+                />
+              </DialogTrigger>
+              <DialogContent>
+                <AddExternalEventPopUpChildren
+                  onClose={() => {}}
+                />
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         <EventList
@@ -54,46 +77,40 @@ export default function IndexPage() {
         />
       </div>
       {/* 詳細サイドピーク */}
-      <SidePeak isOpen={isRefetchOpen} onClose={closeSidePeak}>
-        {selectedEvent && !isEditEventOpen && (
-          <ExternalEventDetailSidePeakChildren
-            event={selectedEvent}
-            onEditClick={openEditEventPopUp}
-            onProfileClick={openProfilePopUp}
-            onDeleted={() => {
-              closeSidePeak();
-              // リストリフレッシュなど
-            }}
-          />
-        )}
-      </SidePeak>
+      <Sheet open={isRefetchOpen} onOpenChange={setIsRefetchOpen}>
+        <SheetContent side="right" className="w-[600px]">
+          {selectedEvent && !isEditEventOpen && (
+            <ExternalEventDetailSidePeakChildren
+              event={selectedEvent}
+              onEditClick={() => setIsEditEventOpen(true)}
+              onProfileClick={() => setIsProfileOpen(true)}
+              onDeleted={() => {
+                closeSidePeak();
+                // リストリフレッシュなど
+              }}
+            />
+          )}
+        </SheetContent>
+      </Sheet>
 
-      {/* モーダル */}
-      <PopUp isOpen={isAddEventOpen} onClose={closeAddEventPopUp}>
-        {isAddEventOpen && (
-          <AddExternalEventPopUpChildren
-            onClose={closeAddEventPopUp}
-          />
-        )}
-      </PopUp>
-      <PopUp isOpen={isFilterOpen} onClose={closeFilterPopUp}>
-        {isFilterOpen && (
-          <FilterPopUpChildren
-            onClose={closeFilterPopUp}
-          />
-        )}
-      </PopUp>
-      <PopUp isOpen={isEditEventOpen} onClose={closeEditEventPopUp}>
-        {isEditEventOpen && (
-          <EditExternalEventPopUpChildren
-            event={selectedEvent}
-            onClose={closeEditEventPopUp}
-          />
-        )}
-      </PopUp>
-      <PopUp isOpen={isProfileOpen} onClose={closeProfilePopUp}>
-        {selectedEvent?.hostUserId && <ProfileDetailPopUpChildren userId={selectedEvent.hostUserId} />}
-      </PopUp>
+      {/* Edit Event Dialog */}
+      <Dialog open={isEditEventOpen} onOpenChange={setIsEditEventOpen}>
+        <DialogContent>
+          {selectedEvent && (
+            <EditExternalEventPopUpChildren
+              event={selectedEvent}
+              onClose={() => setIsEditEventOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+      
+      {/* Profile Dialog */}
+      <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
+        <DialogContent>
+          {selectedEvent?.hostUserId && <ProfileDetailPopUpChildren userId={selectedEvent.hostUserId} />}
+        </DialogContent>
+      </Dialog>
     </ExternalEventFilterProvider>
   );
 }

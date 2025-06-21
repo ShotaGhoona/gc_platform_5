@@ -1,38 +1,70 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  darkMode: "class",
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/feature/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
       colors: {
-        primary: 'var(--primary)',
-        'primary-foreground': 'var(--primary-foreground)',
-        accent: 'var(--accent)',
-        'accent-foreground': 'var(--accent-foreground)',
-        background: 'var(--background)',
-        'background-foreground': 'var(--foreground)',
-        secondary: 'var(--secondary)',
-        'secondary-foreground': 'var(--secondary-foreground)',
-        muted: 'var(--muted)',
-        'muted-foreground': 'var(--muted-foreground)',
-        border: 'var(--border)',
-        input: 'var(--input)',
-        link: 'var(--link)',
-        'link-foreground': 'var(--link-foreground)',
-        success: 'var(--success)',
-        'success-foreground': 'var(--success-foreground)',
-        warning: 'var(--warning)',
-        'warning-foreground': 'var(--warning-foreground)',
-        destructive: 'var(--destructive)',
-        'destructive-foreground': 'var(--destructive-foreground)',
-        card: 'var(--card)',
-        'card-foreground': 'var(--card-foreground)',
-        popover: 'var(--popover)',
-        'popover-foreground': 'var(--popover-foreground)',
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        
+        // ヘッダー色
+        'header-bg': "hsl(var(--header-bg))",
+        'header-text': "hsl(var(--header-text))",
+        'header-text-secondary': "hsl(var(--header-text-secondary))",
+        'header-text-muted': "hsl(var(--header-text-muted))",
+        'header-border': "hsl(var(--header-border))",
+        'header-hover': "hsl(var(--header-hover))",
+        'header-avatar-border': "hsl(var(--header-avatar-border))",
+        
+        // サイドバー色
+        'sidebar-bg': "hsl(var(--sidebar))",
+        'sidebar-text': "hsl(var(--sidebar-text))",
+        'sidebar-border': "hsl(var(--sidebar-border))",
+        'sidebar-hover': "hsl(var(--sidebar-hover))",
+        'sidebar-active': "hsl(var(--sidebar-active))",
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
         "slide-in-from-right": {

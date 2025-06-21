@@ -3,12 +3,11 @@ type Props = {
   avatarImageUrl: string;
   bio: string;
   personalColor: string;
-  onClick: () => void;
 };
-
-export const MemberContainer = ({ username, avatarImageUrl, bio, personalColor, onClick }: Props) => {
+// shadcnのdialogを使用するため、onClickを削除
+export const MemberContainer = ({ username, avatarImageUrl, bio, personalColor }: Props) => {
   return (
-    <div className="shadow-lg rounded-[20px]" onClick={onClick}>
+    <div className="shadow-lg rounded-[20px]">
       <div
         className={`h-[30px] flex items-center justify-end pr-4 rounded-t-[20px]`}
         style={{ backgroundColor: personalColor || "#5D6B80" }}

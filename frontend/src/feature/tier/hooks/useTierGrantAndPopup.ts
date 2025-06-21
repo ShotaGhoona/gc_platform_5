@@ -1,4 +1,4 @@
-import { usePopUp } from "@/hooks/usePopUp";
+import { useState } from "react";
 import { grantTierByAction, getTierDetail, TierDetail } from "../services/tierService";
 
 function getTierGrantKey(userId: string, action: string) {
@@ -6,7 +6,18 @@ function getTierGrantKey(userId: string, action: string) {
 }
 
 export function useTierGrantAndPopup() {
-  const { isOpen, selectedData, openPopUp, closePopUp } = usePopUp();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedData, setSelectedData] = useState<TierDetail | null>(null);
+
+  const openPopUp = (data: TierDetail) => {
+    setSelectedData(data);
+    setIsOpen(true);
+  };
+
+  const closePopUp = () => {
+    setIsOpen(false);
+    setSelectedData(null);
+  };
 
   /**
    * 任意のアクションでTier付与＆ポップアップ表示

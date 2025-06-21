@@ -3,7 +3,6 @@ export type MemberListItem = {
   username: string;
   avatarImageUrl: string;
   bio: string;
-  personalColor: string;
 };
 
 export async function fetchProfileList(): Promise<MemberListItem[]> {
@@ -17,7 +16,6 @@ export async function fetchProfileList(): Promise<MemberListItem[]> {
       username: item.username,
       avatarImageUrl: item.avatar_image_url,
       bio: item.bio,
-      personalColor: item.personal_color,
     }));
   } catch (e) {
     throw e;

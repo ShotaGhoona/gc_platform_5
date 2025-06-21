@@ -18,7 +18,6 @@ export const profileService = {
         bio: data.bio,
         oneLine: data.one_line_profile ?? "",
         background: data.background,
-        personalColor: data.personal_color ?? "",
         interests: data.interests ?? [],
         coreSkills: data.core_skills ?? [],
         websiteUrl: data.website_url ?? "",

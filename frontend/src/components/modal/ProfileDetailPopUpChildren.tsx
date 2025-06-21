@@ -146,7 +146,7 @@ export const ProfileDetailPopUpChildren = ({ userId }: Props) => {
                 style={{ backgroundColor: tier.badgeColor }}
                 >
                   <div className="flex items-center gap-2">
-                    <img src={`/images/tier-back-transparent/${tier.id}.png`} alt={tier.titleEn} className="w-15 h-15" />
+                    <img src={`/images/tier-back-transparent/${tier.id}.png`} alt={tier.titleEn} className="size-10" />
                 </div>
                 </div>
               ))}

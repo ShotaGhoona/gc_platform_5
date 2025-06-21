@@ -4,13 +4,12 @@ import MonthCalendar from "./MonthCalendar";
 import MonthRangeChangeButton from "@/components/common/MonthRangeChangeButton";
 import { useParticipatingEvents } from "../hooks/useParticipatingEvents";
 import { useAttendance } from "../hooks/useAttendance";
-import { SidePeak } from "@/components/display/SidePeak";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import MorningEventSidePeakChildren from "@/components/modal/MorningEventSidePeakChildren";
 import { useMorningEventDetail } from "@/hooks/useMorningEventDetail";
 import { AttendanceCountThisMonth, AttendanceCountTotal, MorningEventCountHost, MorningEventCountParticipate } from "../components/DashboardComponent";
-import { PopUp } from "@/components/display/PopUp";
 import { ProfileDetailPopUpChildren } from "@/components/modal/ProfileDetailPopUpChildren";
-import { usePopUp } from "@/hooks/usePopUp";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default function IndexPage() {
   const today = new Date();
@@ -22,16 +21,16 @@ export default function IndexPage() {
   const { days: attendanceDays, loading: attendanceLoading, error: attendanceError } = useAttendance(viewYear, viewMonth);
 
   // サイドピーク用
-  const { isOpen, selectedData, openPopUp, closePopUp } = usePopUp();
+  const [isSidePeakOpen, setIsSidePeakOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const { detail, loading: detailLoading, error: detailError } = useMorningEventDetail(selectedEventId);
 
   const openSidePeak = (eventId: string) => {
     setSelectedEventId(eventId);
-    openPopUp(eventId);
+    setIsSidePeakOpen(true);
   };
   const closeSidePeak = () => {
-    closePopUp();
+    setIsSidePeakOpen(false);
     setSelectedEventId(null);
   };
 
@@ -97,20 +96,24 @@ export default function IndexPage() {
         </div>
       </div>
       
-      <SidePeak isOpen={isOpen} onClose={closeSidePeak}>
-        {selectedEventId && detail && (
-          <MorningEventSidePeakChildren
-            event={detail}
-            onProfileClick={handleProfileClick}
-            onEditClick={() => handleEditClick(detail)}
-          />
-        )}
-        {selectedEventId && detailLoading && <div>読み込み中...</div>}
-        {selectedEventId && detailError && <div className="text-red-500">{detailError}</div>}
-      </SidePeak>
-      <PopUp isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)}>
-        {selectedUserId && <ProfileDetailPopUpChildren userId={selectedUserId} />}
-      </PopUp>
+      <Sheet open={isSidePeakOpen} onOpenChange={setIsSidePeakOpen}>
+        <SheetContent side="right" className="w-[600px]">
+          {selectedEventId && detail && (
+            <MorningEventSidePeakChildren
+              event={detail}
+              onProfileClick={handleProfileClick}
+              onEditClick={() => handleEditClick(detail)}
+            />
+          )}
+          {selectedEventId && detailLoading && <div>読み込み中...</div>}
+          {selectedEventId && detailError && <div className="text-red-500">{detailError}</div>}
+        </SheetContent>
+      </Sheet>
+      <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
+        <DialogContent>
+          {selectedUserId && <ProfileDetailPopUpChildren userId={selectedUserId} />}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

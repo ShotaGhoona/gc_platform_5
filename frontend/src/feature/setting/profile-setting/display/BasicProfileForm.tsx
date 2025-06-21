@@ -56,12 +56,6 @@ export const BasicProfileForm = ({
     validateAll,
   } = useProfileFormValidation();
 
-  const personalColors = [
-    "#5D6B80",
-    "#D68897",
-    "#4f6c58",
-    "#b59235",
-  ];
 
   useEffect(() => {
     setLocalForm(form);
@@ -266,39 +260,6 @@ export const BasicProfileForm = ({
           className="mt-1 block w-full rounded-md text-sm text-gray-600 bg-[#f9f9f9] px-4 py-2 shadow-sm"
           placeholder="あなたの経歴や背景を教えてください（140文字以内）"
         />
-      </div>
-      <div className="space-y-2">
-        <label
-          htmlFor="background"
-          className="block text-sm text-[#5D6B80] font-bold"
-        >
-          Wiich color do you like?
-        </label>
-        <div className="flex gap-2">
-          {/* mapで色を表示 */}
-          {personalColors.map((color) => {
-            const isSelected = localForm.personal_color === color;
-            return (
-              <div
-                key={color}
-                className={`w-10 h-10 bg-white border border-gray-300 rounded-lg flex items-center justify-center`}
-              >
-                <button
-                  className={`rounded-lg transition-all duration-150
-                    ${isSelected ? "w-8 h-8" : "w-10 h-10"}
-                    bg-[${color}]
-                  `}
-                  style={{ backgroundColor: color }}
-                  onClick={() => {
-                    setLocalForm((prev) => ({ ...prev, personal_color: color }));
-                    onChange({ personal_color: color });
-                  }}
-                  type="button"
-                ></button>
-              </div>
-            );
-          })}
-        </div>
       </div>
     </div>
   );

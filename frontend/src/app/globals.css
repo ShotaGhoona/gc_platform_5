@@ -1,100 +1,88 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@custom-variant dark (&:is(.dark *));
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 215 19% 43%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 345 39% 69%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 215 19% 43%;
+    
+    --header-bg: 0 0% 100%;
+    --header-text: 215 19% 43%;
+    --header-text-secondary: 215 16% 47%;
+    --header-text-muted: 220 13% 82%;
+    --header-border: 220 13% 91%;
+    --header-hover: 220 14% 96%;
+    --header-avatar-border: 220 13% 82%;
+    
+    --sidebar: 215 19% 43%;
+    --sidebar-text: 0 0% 100%;
+    --sidebar-border: 216 22% 29%;
+    --sidebar-hover: 215 21% 35%;
+    --sidebar-active: 345 39% 69%;
+  }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 215 19% 43%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 330 81% 60%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 215 19% 43%;
+    
+    --header-bg: 0 0% 8%;
+    --header-text: 220 13% 91%;
+    --header-text-secondary: 215 25% 71%;
+    --header-text-muted: 215 16% 47%;
+    --header-border: 215 28% 17%;
+    --header-hover: 220 26% 14%;
+    --header-avatar-border: 215 25% 33%;
+    
+    --sidebar: 220 26% 14%;
+    --sidebar-text: 220 9% 98%;
+    --sidebar-border: 215 28% 17%;
+    --sidebar-hover: 215 28% 17%;
+    --sidebar-active: 330 81% 60%;
+  }
 }
 
-:root {
-  /* 共通サイズ */
-  --radius: 0.625rem;
-
-  /* ───── ベース ───── */
-  --background:            #EEEEEE; /* oklch(1 0 0) */
-  --foreground:            #252525; /* oklch(0.14 0 0) */
-
-  --card:                  #FFFFFF; /* oklch(0.98 0 0) */
-  --card-foreground:       var(--foreground);
-
-  --popover:               var(--card);
-  --popover-foreground:    var(--card-foreground);
-
-  /* ───── キー・カラー ───── */
-  --primary:               #5D6B80; /* 既定 */
-  --primary-foreground:    #FFFFFF; /* 4.6 : 1 以上 */
-
-  --accent:                #D68897; /* 既定 */
-  --accent-foreground:     #FFFFFF; /* 5.0 : 1 以上 */
-
-  /* ───── セカンダリ・状態色 ───── */
-  --secondary:             #E8EBF0; /* oklch(0.93 0.04 260) */
-  --secondary-foreground:  var(--primary);
-
-  --muted:                 #F1F3F6; /* oklch(0.96 0.02 260) */
-  --muted-foreground:      #788291; /* oklch(0.56 0.02 260) */
-
-  --destructive:           #D94A4A; /* oklch(0.56 0.25 28) */
-  --destructive-foreground:#FFFFFF;
-
-  /* ───── 枠線・入力 ───── */
-  --border:                #D2D6DE; /* oklch(0.86 0.01 260) */
-  --input:                 #EBEDF1; /* oklch(0.92 0.01 260) */
-  --ring:                  #9AA4B8; /* oklch(0.72 0.03 260) */
-
-  /* ───── チャート 5 色 ───── */
-  --chart-1:               #B9825A; /* oklch(0.64 0.18  40) */
-  --chart-2:               #7898B9; /* oklch(0.60 0.12 185) */
-  --chart-3:               #566A98; /* oklch(0.50 0.08 235) */
-  --chart-4:               #C8D480; /* oklch(0.78 0.18  85) */
-  --chart-5:               #B4C57A; /* oklch(0.74 0.17  65) */
-
-  /* ───── サイドバー ───── */
-  --sidebar:                     #2A3A4D; /* oklch(0.33 0.05 260) */
-  --sidebar-foreground:          #FFFFFF;
-
-  --sidebar-primary:             #F6E5D2; /* oklch(0.92 0.06 38) */
-  --sidebar-primary-foreground:  #2A3A4D;
-
-  --sidebar-accent:              var(--accent);
-  --sidebar-accent-foreground:   var(--accent-foreground);
-
-  --sidebar-border:              #0000000A; /* 4 % 透過黒 (8桁 hex) */
-  --sidebar-ring:                #9AA4B8;   /* 同じく ring 色 */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

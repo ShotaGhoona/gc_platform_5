@@ -35,7 +35,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-[64px] hover:w-[200px] min-h-screen h-full bg-[#5D6B80] text-white transition-all duration-300 ease-in-out group shadow-[10px_0_10px_rgba(0,0,0,0.1)] relative">
+    <aside className="w-[64px] hover:w-[200px] min-h-screen h-full bg-sidebar-bg text-sidebar-text transition-all duration-300 ease-in-out group shadow-[10px_0_10px_rgba(0,0,0,0.1)] relative">
       <div className="flex flex-col gap-2 p-[8px]">
         <div className="flex items-center gap-2 h-[75px] p-[4px]">
           <img src="/svg/logo.svg" alt="Ghoona Camp" className="w-[30px] h-[30px]" />
@@ -45,24 +45,24 @@ export default function Sidebar() {
 
       <nav>
         {groups.map((g) => (
-          <div key={g.title} className="border-b border-[#374559] p-[8px]">
+          <div key={g.title} className="border-b border-sidebar-border p-[8px]">
             {g.links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 className={clsx(
-                  'flex items-center p-[8px] rounded-lg text-sm',
+                  'flex items-center p-[8px] rounded-lg text-sm transition-colors',
                   pathname === l.href
-                    ? 'bg-primary text-white hover:bg-slate-600'
-                    : 'hover:bg-slate-600'
+                    ? 'bg-sidebar-hover text-sidebar-active'
+                    : 'hover:bg-sidebar-hover'
                 )}
               >
                 <div
                   className={clsx(
-                    "w-[24px] h-[24px]",
+                    "w-[24px] h-[24px] transition-colors",
                     pathname !== l.href 
-                      ? "text-white"
-                      : "text-[#D68897]"
+                      ? "text-sidebar-text"
+                      : "text-sidebar-active"
                   )}
                 >
                   {iconMap[l.icon] && React.cloneElement(iconMap[l.icon], { size: 24 })}
@@ -71,8 +71,8 @@ export default function Sidebar() {
                   className={clsx(
                     "ml-[12px] text-[15px] opacity-0 group-hover:opacity-100 font-semibold transition-opacity delay-100 whitespace-nowrap",
                     pathname === l.href
-                      ? "text-[#D68897]"
-                      : "text-white"
+                      ? "text-sidebar-active"
+                      : "text-sidebar-text"
                   )}
                 >
                   {l.label}

@@ -63,7 +63,6 @@ export default function ProfileSetting() {
         one_line_profile: profile.oneLine ?? "",
         background: profile.background ?? "",
         avatar_image_url: profile.avatarImageUrl ?? "",
-        personal_color: profile.personalColor ?? "",
       });
     }
   }, [profile]);
@@ -117,7 +116,6 @@ export default function ProfileSetting() {
       ? URL.createObjectURL(avatarFile)
       : basicForm.avatar_image_url || profile?.avatarImageUrl || "",
     sns: snsList,
-    personalColor: basicForm.personal_color || profile?.personalColor || "",
   };
   const router = useRouter();
   // 確認画面で保存

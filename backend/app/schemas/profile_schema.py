@@ -31,7 +31,6 @@ class MemberListSchema(BaseModel):
     username: str
     avatar_image_url: Optional[str] = None
     bio: Optional[str] = None
-    personal_color: Optional[str] = None
 
     class Config:
         orm_mode = True
@@ -60,7 +59,6 @@ class ProfileUpdateSchema(BaseModel):
     username: str
     bio: Optional[str] = None
     one_line_profile: Optional[str] = None
-    personal_color: Optional[str] = None
     background: Optional[str] = None
     avatar_image_url: Optional[str] = None
     interests: Optional[List[int]] = None

@@ -10,14 +10,25 @@ import { useState } from "react";
 import MonthRangeChangeButton from "@/components/common/MonthRangeChangeButton";
 import RivalCompareCalendar from "./RivalCompareCalendar";
 import MainContentsDateRangeSelect from "@/feature/home/dashboard/components/MainContentsDateRangeSelect";
-import {PopUp} from "@/components/display/PopUp";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { ProfileDetailPopUpChildren } from "@/components/modal/ProfileDetailPopUpChildren";
-import { usePopUp } from "@/hooks/usePopUp";
+
+const ProfileDialog = ({ userId, children }: { userId: string; children: React.ReactNode }) => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent className="max-w-4xl">
+        <ProfileDetailPopUpChildren userId={userId} />
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default function IndexPage() {
-  const { isOpen: isProfileOpen, selectedData, openPopUp: openProfilePopUp, closePopUp: closeProfilePopUp } = usePopUp();
   const handleProfileClick = (userId: string) => {
-    openProfilePopUp(userId);
+    // This will be handled by the Dialog component
   };
 
   const [selectedViewIndex, setSelectedViewIndex] = useState(0);
@@ -54,22 +65,19 @@ export default function IndexPage() {
             return (
               <>
                 <div className="flex-1 flex flex-col bg-white rounded-lg shadow-lg p-5">
-                  <TopRankingThisMonth year={year} month={month} onProfileClick={handleProfileClick} rankingType="Rival" userId={userId} />
+                  <TopRankingThisMonth year={year} month={month} onProfileClick={handleProfileClick} rankingType="Rival" userId={userId} ProfileDialog={ProfileDialog} />
                 </div>
                 <div className="flex-1 flex flex-col bg-white rounded-lg shadow-lg p-5">
-                  <TopRankingAllSeason onProfileClick={handleProfileClick} rankingType="Rival" userId={userId} />
+                  <TopRankingAllSeason onProfileClick={handleProfileClick} rankingType="Rival" userId={userId} ProfileDialog={ProfileDialog} />
                 </div>
                 <div className="flex-1 flex flex-col bg-white rounded-lg shadow-lg p-5">
-                  <StreakRanking onProfileClick={handleProfileClick} rankingType="Rival" userId={userId} />
+                  <StreakRanking onProfileClick={handleProfileClick} rankingType="Rival" userId={userId} ProfileDialog={ProfileDialog} />
                 </div>
               </>
             );
           })()}
         </div>
       </div>
-      <PopUp isOpen={isProfileOpen} onClose={closeProfilePopUp}>
-        {selectedData && <ProfileDetailPopUpChildren userId={selectedData} />}
-      </PopUp>
     </>
   );
 }

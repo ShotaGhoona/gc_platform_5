@@ -7,16 +7,27 @@ import { FaPlus } from "react-icons/fa";
 import { useMorningEventList } from "../hooks/useMorningEvent";
 import { useMorningEventDetail } from "@/hooks/useMorningEventDetail";
 import { useUser } from "@clerk/nextjs";
-import { useSidePeak } from "@/hooks/useSidePeak";
-import { SidePeak } from "@/components/display/SidePeak";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import MorningEventSidePeakChildren from "@/components/modal/MorningEventSidePeakChildren";
 import MorningEventGalleryView from "../components/MorningEventGalleryView";
 import MorningEventCalendarView from "../components/MorningEventCalendarView";
-import { PopUp } from "@/components/display/PopUp";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { ProfileDetailPopUpChildren } from "@/components/modal/ProfileDetailPopUpChildren";
 import { AddMorningEventModal } from "../components/AddMorningEventModal";
 import { EditMorningEventModal } from "../components/EditMorningEventModal";
-import { usePopUp } from "@/hooks/usePopUp";
+
+const ProfileDialog = ({ userId, children }: { userId: string; children: React.ReactNode }) => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent className="max-w-4xl">
+        <ProfileDetailPopUpChildren userId={userId} />
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default function IndexPage() {
   const today = new Date();
@@ -24,13 +35,21 @@ export default function IndexPage() {
   const [month, setMonth] = useState(today.getMonth() + 1); // 1-12
   const [selectedViewIndex, setSelectedViewIndex] = useState(0);
 
-  const { isOpen: isProfileOpen, openPopUp: openProfilePopUp, closePopUp: closeProfilePopUp } = usePopUp();
-
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const { user } = useUser();
   const { events, loading, error } = useMorningEventList(year, month, user?.id);
-  const { isOpen, selectedData, openSidePeak, closeSidePeak } = useSidePeak();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedData, setSelectedData] = useState<string | null>(null);
+  
+  const openSidePeak = (eventId: string) => {
+    setSelectedData(eventId);
+    setIsOpen(true);
+  };
+  
+  const closeSidePeak = () => {
+    setIsOpen(false);
+    setSelectedData(null);
+  };
   const eventId = selectedData as string | null;
   const { detail, loading: detailLoading, error: detailError } = useMorningEventDetail(eventId);
 
@@ -53,7 +72,7 @@ export default function IndexPage() {
   }
 
   const handleProfileClick = (userId: string) => {
-    openProfilePopUp(userId);
+    // This will be handled by the Dialog component
   };
 
   const handleEditClick = (event: any) => {
@@ -89,38 +108,42 @@ export default function IndexPage() {
           </div>
         </div>
       </div>
-      <SidePeak isOpen={isOpen} onClose={closeSidePeak}>
-        {eventId && detail && (
-          <MorningEventSidePeakChildren
-            event={detail}
-            onProfileClick={handleProfileClick}
-            onEditClick={() => handleEditClick(detail)}
-          />
-        )}
-        {eventId && detailLoading && <div>読み込み中...</div>}
-        {eventId && detailError && <div className="text-red-500">{detailError}</div>}
-      </SidePeak>
-      <PopUp isOpen={isProfileOpen} onClose={closeProfilePopUp}>
-        {selectedUserId && <ProfileDetailPopUpChildren userId={selectedUserId} />}
-      </PopUp>
-      <PopUp isOpen={!!showAddMorningEventModal} onClose={() => setShowAddMorningEventModal(false)}>
-        {showAddMorningEventModal && (
-          <AddMorningEventModal
-            onClose={() => setShowAddMorningEventModal(false)}
-          />
-        )}
-      </PopUp>
-      <PopUp isOpen={!!showEditMorningEventModal} onClose={() => setShowEditMorningEventModal(false)}>
-        {showEditMorningEventModal && editTargetEvent && (
-          <EditMorningEventModal
-            onClose={() => {
-              setShowEditMorningEventModal(false);
-              setEditTargetEvent(null);
-            }}
-            event={editTargetEvent}
-          />
-        )}
-      </PopUp>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetContent side="right" className="w-[600px]">
+          {eventId && detail && (
+            <MorningEventSidePeakChildren
+              event={detail}
+              onProfileClick={handleProfileClick}
+              onEditClick={() => handleEditClick(detail)}
+              ProfileDialog={ProfileDialog}
+            />
+          )}
+          {eventId && detailLoading && <div>読み込み中...</div>}
+          {eventId && detailError && <div className="text-red-500">{detailError}</div>}
+        </SheetContent>
+      </Sheet>
+      <Dialog open={!!showAddMorningEventModal} onOpenChange={setShowAddMorningEventModal}>
+        <DialogContent className="max-w-4xl">
+          {showAddMorningEventModal && (
+            <AddMorningEventModal
+              onClose={() => setShowAddMorningEventModal(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!showEditMorningEventModal} onOpenChange={setShowEditMorningEventModal}>
+        <DialogContent className="max-w-4xl">
+          {showEditMorningEventModal && editTargetEvent && (
+            <EditMorningEventModal
+              onClose={() => {
+                setShowEditMorningEventModal(false);
+                setEditTargetEvent(null);
+              }}
+              event={editTargetEvent}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

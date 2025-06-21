@@ -14,7 +14,6 @@ class ProfileRepository:
                 Profile.username,
                 Profile.avatar_image_url,
                 Profile.bio,
-                Profile.personal_color,
             )
             .all()
         )

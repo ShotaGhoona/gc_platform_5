@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import TransitionWrapper from "../components/transition/TransitionWrapper";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -24,13 +25,20 @@ function RootLayoutClient({
 }) {
   return (
     <ClerkProvider>
-      <html lang="ja">
-        <body className={`${outfit.variable} antialiased bg-[#eeeeee]`}>
-          {/* クライアントコンポーネントはbody内でJSXとして呼び出す */}
-          <TierLoginPopupTrigger />
-          <TransitionWrapper>
-            {children}
-          </TransitionWrapper>
+      <html lang="ja" suppressHydrationWarning>
+        <body className={`${outfit.variable} antialiased bg-background text-foreground`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {/* クライアントコンポーネントはbody内でJSXとして呼び出す */}
+            <TierLoginPopupTrigger />
+            <TransitionWrapper>
+              {children}
+            </TransitionWrapper>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
