@@ -1,3 +1,5 @@
+import os, sys
+print("DBG-DBURL", os.getenv("DATABASE_URL"), file=sys.stderr)
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.session import engine

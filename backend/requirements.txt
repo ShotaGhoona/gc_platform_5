@@ -2,6 +2,7 @@ openai
 fastapi==0.109.2
 uvicorn==0.27.1
 sqlalchemy==2.0.27
+psycopg2-binary
 supabase==2.3.4
 python-dotenv==1.0.1
 pydantic>=2.8.0
