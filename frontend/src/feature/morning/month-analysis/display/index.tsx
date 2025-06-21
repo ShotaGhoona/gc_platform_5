@@ -62,7 +62,7 @@ export default function IndexPage() {
           </div>
         </div>
         <div className="flex gap-5 flex-1">
-          <div className="w-1/3 h-full flex flex-col gap-5">
+          {/* <div className="w-1/3 h-full flex flex-col gap-5">
             <div className="flex gap-5">
               <div className="bg-white rounded-lg p-5 w-full h-full shadow-lg">
                 <AttendanceCountThisMonth />
@@ -79,8 +79,8 @@ export default function IndexPage() {
                 <MorningEventCountParticipate />
               </div>
             </div>
-          </div>
-          <div className="bg-white rounded-lg p-5 w-2/3 h-full shadow-lg">
+          </div> */}
+          <div className="bg-white rounded-lg p-5 h-full shadow-lg w-full">
             <MonthCalendar
               viewYear={viewYear}
               viewMonth={viewMonth}
@@ -110,7 +110,7 @@ export default function IndexPage() {
         </SheetContent>
       </Sheet>
       <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
-        <DialogContent>
+        <DialogContent className="min-w-[300px] md:min-w-[1000px]">
           {selectedUserId && <ProfileDetailPopUpChildren userId={selectedUserId} />}
         </DialogContent>
       </Dialog>
