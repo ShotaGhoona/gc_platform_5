@@ -37,7 +37,7 @@ def get_member_detail_service(db: Session, user_id: str, viewer_id: str = None):
     interests = profile.interests_array or []
     core_skills = profile.core_skills_array or []
 
-    tier_schemas = [TierSchema.from_orm(t) for t in tiers] if tiers else []
+    tier_schemas = [TierSchema.model_validate(t) for t in tiers] if tiers else []
 
     # SNS: 中間テーブルのlink値を取得
     from app.schemas.profile_schema import SnsForMemberSchema

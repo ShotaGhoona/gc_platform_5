@@ -7,27 +7,27 @@ from typing import List
 
 def create_monthly_goal(db: Session, goal_in: MonthlyGoalCreate) -> MonthlyGoalResponse:
     repo = MonthlyGoalRepository(db)
-    goal = MonthlyGoal(**goal_in.dict())
+    goal = MonthlyGoal(**goal_in.model_dump())
     created = repo.create(goal)
-    return MonthlyGoalResponse.from_orm(created)
+    return MonthlyGoalResponse.model_validate(created)
 
 def get_monthly_goal(db: Session, goal_id: int) -> MonthlyGoalResponse:
     repo = MonthlyGoalRepository(db)
     goal = repo.get_by_id(goal_id)
     if not goal:
         raise HTTPException(status_code=404, detail="Goal not found")
-    return MonthlyGoalResponse.from_orm(goal)
+    return MonthlyGoalResponse.model_validate(goal)
 
 def get_user_monthly_goals(db: Session, user_id: str) -> List[MonthlyGoalResponse]:
     repo = MonthlyGoalRepository(db)
     goals = repo.get_by_user(user_id)
-    return [MonthlyGoalResponse.from_orm(g) for g in goals]
+    return [MonthlyGoalResponse.model_validate(g) for g in goals]
 
 # ユーザーの今月の目標を取得
 def get_user_current_month_goals(db: Session, user_id: str) -> List[MonthlyGoalResponse]:
     repo = MonthlyGoalRepository(db)
     goals = repo.get_by_user_current_month(user_id)
-    return [MonthlyGoalResponse.from_orm(g) for g in goals]
+    return [MonthlyGoalResponse.model_validate(g) for g in goals]
 
 def get_public_monthly_goals(db: Session) -> List[MonthlyGoalResponse]:
     repo = MonthlyGoalRepository(db)
@@ -58,15 +58,15 @@ def get_public_monthly_goals(db: Session) -> List[MonthlyGoalResponse]:
 def get_user_goals_in_range(db: Session, user_id: str, start, end) -> List[MonthlyGoalResponse]:
     repo = MonthlyGoalRepository(db)
     goals = repo.get_by_user_in_range(user_id, start, end)
-    return [MonthlyGoalResponse.from_orm(g) for g in goals]
+    return [MonthlyGoalResponse.model_validate(g) for g in goals]
 
 def update_monthly_goal(db: Session, goal_id: int, goal_in: MonthlyGoalUpdate) -> MonthlyGoalResponse:
     repo = MonthlyGoalRepository(db)
-    updates = {k: v for k, v in goal_in.dict().items() if v is not None}
+    updates = {k: v for k, v in goal_in.model_dump().items() if v is not None}
     updated = repo.update(goal_id, updates)
     if not updated:
         raise HTTPException(status_code=404, detail="Goal not found")
-    return MonthlyGoalResponse.from_orm(updated)
+    return MonthlyGoalResponse.model_validate(updated)
 
 def delete_monthly_goal(db: Session, goal_id: int) -> None:
     repo = MonthlyGoalRepository(db)
