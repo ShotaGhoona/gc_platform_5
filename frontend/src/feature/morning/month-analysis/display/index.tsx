@@ -103,6 +103,11 @@ export default function IndexPage() {
               event={detail}
               onProfileClick={handleProfileClick}
               onEditClick={() => handleEditClick(detail)}
+              ProfileDialog={({ userId, children }) => (
+                <div onClick={() => handleProfileClick(userId)}>
+                  {children}
+                </div>
+              )}
             />
           )}
           {selectedEventId && detailLoading && <div>読み込み中...</div>}

@@ -1,13 +1,9 @@
 import os
 import sys
 import asyncio
+from datetime import datetime
 from dotenv import load_dotenv
 import discord
-
-# パスの調整（Railway環境での実行に対応）
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from app.services.discord_bot_service import save_attendance_event
 
 load_dotenv()
 
@@ -34,6 +30,7 @@ async def on_voice_state_update(member, before, after):
         if not before.channel or before.channel.name != TARGET_CHANNEL_NAME:
             print(f"{member.display_name} が出席チャンネルに入りました")
             # ここでDB保存ロジックを呼び出す
+            from services.discord_bot_service import save_attendance_event
             await save_attendance_event(member)
         else:
             print(f"{member.display_name} はすでに出席チャンネルにいました")
