@@ -67,8 +67,31 @@ export function DiscordMockScreen() {
             <div className="space-y-1">
               <div className="flex items-center gap-2 px-2 py-1 rounded text-gray-400 hover:bg-gray-700 hover:text-white cursor-pointer">
                 <Mic className="w-4 h-4" />
-                <span className="text-sm">朝活部屋</span>
-                <span className="text-xs bg-green-600 px-1 rounded">12</span>
+                <span className="text-sm">もくもく部屋</span>
+                <span className="text-xs bg-green-600 px-1 rounded">8</span>
+              </div>
+              <div className="flex items-center gap-2 px-2 py-1 rounded text-gray-400 hover:bg-gray-700 hover:text-white cursor-pointer">
+                <Mic className="w-4 h-4" />
+                <span className="text-sm">わいわい部屋</span>
+                <span className="text-xs bg-green-600 px-1 rounded">5</span>
+              </div>
+              <div className="flex items-center gap-2 px-2 py-1 rounded text-gray-400 hover:bg-gray-700 hover:text-white cursor-pointer">
+                <Mic className="w-4 h-4" />
+                <span className="text-sm">ねえねえ部屋</span>
+                <span className="text-xs bg-green-600 px-1 rounded">3</span>
+              </div>
+              <div className="text-xs font-semibold text-gray-400 uppercase mt-3 mb-1">ミーティングルーム</div>
+              <div className="flex items-center gap-2 px-2 py-1 rounded text-gray-400 hover:bg-gray-700 hover:text-white cursor-pointer">
+                <Mic className="w-4 h-4" />
+                <span className="text-sm">MTG-Room 1</span>
+              </div>
+              <div className="flex items-center gap-2 px-2 py-1 rounded text-gray-400 hover:bg-gray-700 hover:text-white cursor-pointer">
+                <Mic className="w-4 h-4" />
+                <span className="text-sm">MTG-Room 2</span>
+              </div>
+              <div className="flex items-center gap-2 px-2 py-1 rounded text-gray-400 hover:bg-gray-700 hover:text-white cursor-pointer">
+                <Mic className="w-4 h-4" />
+                <span className="text-sm">MTG-Room 3</span>
               </div>
             </div>
           </div>
