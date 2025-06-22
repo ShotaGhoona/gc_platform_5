@@ -79,33 +79,33 @@ export default function MonthCalendar({ viewYear, viewMonth, events, onEventClic
             const isAttended = attendanceDays.includes(dateStr);
             return (
               <div className="p-1">
-              <div
-                key={idx}
-                className={`w-full h-full flex flex-col items-center p-1 relative rounded-[15px] border-5 border-white
-                  ${isAttended ? "bg-[#EAC2CA]" : isSat || isSun ? "bg-gray-100" : "bg-gray-50"}
-                `}
-                style={{ minHeight: 0 }}
-              >
-                <div className={`w-10 h-10 flex items-center justify-center rounded-full mb-1 ${isToday ? "bg-[#5D6B80] text-white" : "text-gray-700"}`}>
-                  {d || ""}
+                <div
+                  key={idx}
+                  className={`p-1 w-full h-full flex flex-col items-center relative rounded-[15px] border-5 border-white
+                    ${isAttended ? "bg-[#EAC2CA]" : isSat || isSun ? "bg-gray-100" : "bg-gray-50"}
+                  `}
+                  style={{ minHeight: 0 }}
+                >
+                  <div className={`w-10 h-10 flex items-center justify-center rounded-full mb-1 ${isToday ? "bg-[#5D6B80] text-white" : "text-gray-700"}`}>
+                    {d || ""}
+                  </div>
+                  <div className="flex flex-col gap-1 w-full items-center">
+                    {d &&
+                      eventMap[dateKey]?.map((event) => {
+                        const bgColor = event.is_host ? "bg-[#D68897]" : "bg-[#5D6B80]";
+                        return (
+                          <div
+                            key={event.id}
+                            className={`flex items-center gap-1 w-full rounded px-2 py-0.5 shadow-md text-white cursor-pointer ${bgColor}`}
+                            onClick={() => onEventClick?.(event.id)}
+                          >
+                            <img src={event.host_avatar_image_url} alt="host" className="w-5 h-5 rounded-full" />
+                            <span className="text-xs truncate w-full text-center font-bold">{event.title}</span>
+                          </div>
+                        );
+                      })}
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1 w-full items-center">
-                  {d &&
-                    eventMap[dateKey]?.map((event) => {
-                      const bgColor = event.is_host ? "bg-[#D68897]" : "bg-[#5D6B80]";
-                      return (
-                        <div
-                          key={event.id}
-                          className={`flex items-center gap-1 w-full rounded px-2 py-0.5 shadow-md text-white cursor-pointer ${bgColor}`}
-                          onClick={() => onEventClick?.(event.id)}
-                        >
-                          <img src={event.host_avatar_image_url} alt="host" className="w-5 h-5 rounded-full" />
-                          <span className="text-xs truncate w-full text-center font-bold">{event.title}</span>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
               </div>
             );
           })}
