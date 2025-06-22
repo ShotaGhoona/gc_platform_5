@@ -1,9 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { X } from "lucide-react";
 import { HomeDemoScreen } from "../demoScreens/HomeDemoScreen";
 import { DashboardDemoScreen } from "../demoScreens/DashboardDemoScreen";
+import { RankingDemoScreen } from "../demoScreens/RankingDemoScreen";
+import { MonthAnalysisDemoScreen } from "../demoScreens/MonthAnalysisDemoScreen";
+import { MorningEventDemoScreen } from "../demoScreens/MorningEventDemoScreen";
+import { MonthlyGoalDemoScreen } from "../demoScreens/MonthlyGoalDemoScreen";
+import { TierCardDemoScreen } from "../demoScreens/TierCardDemoScreen";
+import { RivalDemoScreen } from "../demoScreens/RivalDemoScreen";
+import { ExternalEventsDemoScreen } from "../demoScreens/ExternalEventsDemoScreen";
+import { KnowledgeDemoScreen } from "../demoScreens/KnowledgeDemoScreen";
+import { MemberDemoScreen } from "../demoScreens/MemberDemoScreen";
 import { IoHome } from "react-icons/io5";
 import { MdSpaceDashboard, MdCalendarMonth, MdEmojiEvents } from "react-icons/md";
 import { PiRankingFill, PiCardholderFill } from "react-icons/pi";
@@ -17,17 +25,17 @@ export default function PageSection() {
   const [activePage, setActivePage] = useState<string | null>(null);
 
   const iconMap: Record<string, React.ReactElement> = {
-    IoHome: <IoHome size={16} />,
-    MdSpaceDashboard: <MdSpaceDashboard size={16} />,
-    PiRankingFill: <PiRankingFill size={16} />,
-    MdCalendarMonth: <MdCalendarMonth size={16} />,
-    BiSolidParty: <BiSolidParty size={16} />,
-    GiGoalKeeper: <GiGoalKeeper size={16} />,
-    PiCardholderFill: <PiCardholderFill size={16} />,
-    BsFire: <BsFire size={16} />,
-    FaLightbulb: <FaLightbulb size={16} />,
-    MdEmojiEvents: <MdEmojiEvents size={16} />,
-    RiTeamFill: <RiTeamFill size={16} />,
+    IoHome: <IoHome size={24} />,
+    MdSpaceDashboard: <MdSpaceDashboard size={24} />,
+    PiRankingFill: <PiRankingFill size={24} />,
+    MdCalendarMonth: <MdCalendarMonth size={24} />,
+    BiSolidParty: <BiSolidParty size={24} />,
+    GiGoalKeeper: <GiGoalKeeper size={24} />,
+    PiCardholderFill: <PiCardholderFill size={24} />,
+    BsFire: <BsFire size={24} />,
+    FaLightbulb: <FaLightbulb size={24} />,
+    MdEmojiEvents: <MdEmojiEvents size={24} />,
+    RiTeamFill: <RiTeamFill size={24} />,
   };
 
   const pageGroups = [
@@ -63,25 +71,25 @@ export default function PageSection() {
   ];
 
   return (
-    <section className="py-24 px-6 bg-gray-50" id="pages">
+    <section className="py-24 px-6 bg-background" id="pages">
       <div className="">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-black mb-6 leading-tight">
-            <span className="text-accent">豊富な機能</span>を体験
+            <span className="text-accent">豊富な機能</span>を準備
           </h2>
           <p className="text-xl text-gray-600">
-            朝活をサポートする充実した機能群。実際の画面で使いやすさを確認してください
+            朝活をサポートする充実した機能群。デモ画面を用意しました。
           </p>
         </div>
 
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-5 gap-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-5 gap-8 min-h-[700px]">
             {/* Demo Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden sticky top-8">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-[700px]">
                 {/* Demo Sidebar Header */}
-                <div className="bg-gray-900 text-white p-4">
+                <div className="bg-primary   text-white p-4">
                   <div className="flex items-center gap-3">
                     <img src="/svg/logo.svg" alt="Ghoona Camp" className="w-6 h-6" />
                     <span className="font-bold text-sm">Ghoona Camp</span>
@@ -117,11 +125,11 @@ export default function PageSection() {
 
             {/* Content Area */}
             <div className="lg:col-span-4">
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden min-h-[500px]">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-[700px]">
                 {activePage ? (
-                  <div>
+                  <div className="flex flex-col h-full">
                     {/* Page Header */}
-                    <div className="bg-gray-50 border-b border-gray-200 p-4">
+                    <div className="bg-primary border-b border-gray-200 p-4">
                       <div className="flex items-center gap-3">
                         {(() => {
                           const allLinks = pageGroups.flatMap(g => g.links);
@@ -129,11 +137,11 @@ export default function PageSection() {
                           if (!currentPage) return null;
                           return (
                             <>
-                              <div className="text-accent">
+                              <div className="text-white">
                                 {iconMap[currentPage.icon]}
                               </div>
                               <div>
-                                <h3 className="text-xl font-bold text-gray-900">{currentPage.label}</h3>
+                                <h3 className="text-xl font-bold text-white">{currentPage.label}</h3>
                               </div>
                             </>
                           );
@@ -142,20 +150,18 @@ export default function PageSection() {
                     </div>
 
                     {/* Page Content - Demo Screens */}
-                    <div className="p-6">
+                    <div className="flex-1">
                       {activePage === "/home" && <HomeDemoScreen />}
                       {activePage === "/dashboard" && <DashboardDemoScreen />}
-                      {activePage && !activePage.includes("/home") && !activePage.includes("/dashboard") && (
-                        <div className="text-center py-12">
-                          <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <span className="text-3xl">🚧</span>
-                          </div>
-                          <h4 className="text-xl font-bold text-gray-900 mb-4">デモページ準備中</h4>
-                          <p className="text-gray-600 max-w-md mx-auto">
-                            この機能のデモページは現在準備中です。実際のアプリケーションではここに詳細な画面が表示されます。
-                          </p>
-                        </div>
-                      )}
+                      {activePage === "/ranking" && <RankingDemoScreen />}
+                      {activePage === "/month-analysis" && <MonthAnalysisDemoScreen />}
+                      {activePage === "/morning-event" && <MorningEventDemoScreen />}
+                      {activePage === "/monthly-goal" && <MonthlyGoalDemoScreen />}
+                      {activePage === "/tier-card" && <TierCardDemoScreen />}
+                      {activePage === "/rival" && <RivalDemoScreen />}
+                      {activePage === "/external-events" && <ExternalEventsDemoScreen />}
+                      {activePage === "/knowledge" && <KnowledgeDemoScreen />}
+                      {activePage === "/member" && <MemberDemoScreen />}
                     </div>
                   </div>
                 ) : (

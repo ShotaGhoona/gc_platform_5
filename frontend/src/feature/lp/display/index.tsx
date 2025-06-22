@@ -14,7 +14,7 @@ export default function LandingPage() {
       <ProblemSection />
       <SolutionSection />
       <MemberSection />
-      {/* <PageSection /> */}
+      <PageSection />
       <CTASection />
     </div>
   );
