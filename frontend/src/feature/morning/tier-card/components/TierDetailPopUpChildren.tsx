@@ -78,23 +78,39 @@ export default function TierDetailPopUpChildren({ tier, loading, error, refetch 
             <div className="text-2xl md:text-4xl text-[#5F7392] font-bold">
               {isOwned ? tier.titleJa : ""}
             </div>
-            <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#5F7392] to-[#BF6375]">
-              {isOwned ? tier.titleEn : "oh... You have not yet unlocked this tier card."}
-            </div>
+            {isOwned ? (
+              <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#5F7392] to-[#BF6375]">
+                {tier.titleEn}
+              </div>
+            ) : (
+              <div className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#5F7392] to-[#BF6375]">
+                oh...<br />You have not yet unlocked<br />this tier card.
+              </div>
+            )}
           </div>
           {tier.longDescription && (
-            <div className="text-sm text-gray-500 whitespace-pre-line">
-              {isOwned ? tier.longDescription : "???"}
-            </div>
+            <>
+              {isOwned && (
+                <div className="text-sm text-gray-500 whitespace-pre-line">
+                  {tier.longDescription}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
       {tier.story && (
         <div className="w-full">
           <div className="font-bold mb-2 text-lg text-[#5F7392]">Story</div>
-          <div className="text-gray-500 whitespace-pre-line flex items-center justify-center">
-            {isOwned ? tier.story : "???"}
-          </div>
+          {isOwned ? (
+            <div className="text-gray-500 whitespace-pre-line flex items-center justify-center">
+              {tier.story}
+            </div>
+          ) : (
+            <div className="h-[100px] border border-gray-200 rounded-lg flex items-center justify-center">
+              ???
+            </div>
+          )}
         </div>
       )}
       {localError && (
