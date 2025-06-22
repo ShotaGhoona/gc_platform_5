@@ -1,0 +1,103 @@
+name: Daily Attendance Batch Processing
+
+on:
+  schedule:
+    # 毎日JST 8:00 (UTC 23:00前日) に実行
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+    # 手動実行も可能
+    inputs:
+      date:
+        description: 'Target date (YYYY-MM-DD). Leave empty for today.'
+        required: false
+        type: string
+
+jobs:
+  attendance-batch:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Set up environment variables
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+          DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
+          DISCORD_REDIRECT_URI: ${{ secrets.DISCORD_REDIRECT_URI }}
+        run: |
+          cd backend
+          echo "DATABASE_URL=${DATABASE_URL}" >> .env
+          echo "DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}" >> .env
+          echo "DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}" >> .env
+          echo "DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}" >> .env
+          echo "DISCORD_REDIRECT_URI=${DISCORD_REDIRECT_URI}" >> .env
+
+      - name: Run database migrations (if needed)
+        run: |
+          cd backend
+          # Alembicマイグレーションがある場合はここで実行
+          # alembic upgrade head
+
+      - name: Check database status
+        run: |
+          cd backend
+          python -m app.cli.attendance_batch status
+
+      - name: Run daily attendance batch
+        run: |
+          cd backend
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            python -m app.cli.attendance_batch daily --date "${{ github.event.inputs.date }}"
+          else
+            python -m app.cli.attendance_batch daily
+          fi
+
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "✅ Daily attendance batch processing completed successfully"
+          echo "Date: $(date '+%Y-%m-%d')"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Daily attendance batch processing failed"
+          echo "Please check the logs and fix the issue"
+
+      # Slackやディスコードへの通知を追加する場合
+      # - name: Notify Slack on failure
+      #   if: failure()
+      #   uses: 8398a7/action-slack@v3
+      #   with:
+      #     status: failure
+      #     webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     text: "Daily attendance batch processing failed!"
